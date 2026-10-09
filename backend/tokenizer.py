@@ -10,7 +10,7 @@ class Tokenizer:
     def generate_token(self, entity_type: str) -> str:
         short_id = uuid.uuid4().hex[:6].upper()
         clean_type = entity_type.upper().replace("_ADDRESS", "").replace("IN_", "")
-        return f"[TOK_{clean_type}_{short_id}]"
+        return f"<{clean_type}_{short_id}>"
 
     def tokenize(self, value: str, session_id: str, entity_type: str = "PII", request_id: str = "req_default", ttl: Optional[int] = None) -> str:
         """Tokenizes a single value string."""
@@ -43,8 +43,8 @@ class Tokenizer:
         if not text or not isinstance(text, str):
             return {"restored_text": text, "tokens_found": [], "restoration_details": []}
 
-        # Find all token patterns like [TOK_TYPE_XXXXXX] or TOK_XXXXXX
-        token_pattern = r"\[TOK_[A-Z0-9_]+_[A-F0-9]{6}\]|TOK_[A-F0-9]{8}"
+        # Find all token patterns like <TYPE_XXXXXX>
+        token_pattern = r"<[A-Z0-9_]+_[A-F0-9]{6}>"
         tokens_found = re.findall(token_pattern, text)
         
         restored_text = text

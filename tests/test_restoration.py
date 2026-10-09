@@ -14,7 +14,7 @@ def test_restoration_success():
     token = tokenizer.tokenize(original_value, session_id, entity_type="PHONE_NUMBER")
     
     # Verify the token format
-    assert token.startswith("TOK_") or token.startswith("[TOK_")
+    assert token.startswith("<") and token.endswith(">")
     assert token != original_value
     
     # Restore the token using the correct session ID

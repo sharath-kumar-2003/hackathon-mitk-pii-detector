@@ -2,15 +2,15 @@ import React from 'react';
 
 export default function Navbar({ activeTab, setActiveTab, logsCount, policiesCount }) {
   const tabs = [
-    { id: 'sandbox', label: 'Test Lab' },
-    { id: 'overview', label: 'Overview' },
-    { id: 'detection', label: 'Detection Analytics' },
-    { id: 'leakage', label: 'Leakage Prevention' },
-    { id: 'restoration', label: 'Token Restoration' },
-    { id: 'performance', label: 'Performance' },
-    { id: 'logs', label: `Audit Logs (${logsCount})` },
-    { id: 'policies', label: `Policies (${policiesCount})` },
-    { id: 'evaluation', label: 'Evaluation Suite' }
+    { id: 'sandbox', label: '🧪 Test Lab', icon: '🧪' },
+    { id: 'overview', label: '📊 Overview', icon: '📊' },
+    { id: 'detection', label: '🔍 Detection', icon: '🔍' },
+    { id: 'leakage', label: '🔒 Leakage Prevention', icon: '🔒' },
+    { id: 'restoration', label: '🔐 Token Vault', icon: '🔐' },
+    { id: 'performance', label: '⚡ Performance', icon: '⚡' },
+    { id: 'logs', label: `📋 Audit Logs (${logsCount})`, icon: '📋' },
+    { id: 'policies', label: `📜 Policy Rules (${policiesCount})`, icon: '📜' },
+    { id: 'evaluation', label: '🎯 Benchmark Suite', icon: '🎯' }
   ];
 
   return (

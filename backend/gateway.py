@@ -82,7 +82,8 @@ class Gateway:
         arguments: Any,
         session_id: str = "default_session",
         user_prompt_preview: str = "",
-        request_id: Optional[str] = None
+        request_id: Optional[str] = None,
+        action_override: Optional[str] = None
     ) -> Dict[str, Any]:
         req_id = request_id or f"REQ-{uuid.uuid4().hex[:8].upper()}"
         start_total = time.perf_counter()
@@ -149,7 +150,7 @@ class Gateway:
 
         # Step 3: Transformation / Redaction / Tokenization (Recursive)
         t_trans_start = time.perf_counter()
-        policy_action = policy_eval["action"].lower()
+        policy_action = action_override.lower() if action_override else policy_eval["action"].lower()
         protected_values: List[Dict[str, Any]] = []
 
         redact_fields = policy_eval.get("policy", {}).get("redact_pii_in", []) if policy_eval.get("policy") else []

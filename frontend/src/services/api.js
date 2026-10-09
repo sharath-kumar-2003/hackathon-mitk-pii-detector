@@ -22,11 +22,11 @@ export async function fetchPolicies() {
   return res.json();
 }
 
-export async function runAgentRequest(userRequest, sessionId) {
+export async function runAgentRequest(userRequest, sessionId, actionOverride = null) {
   const res = await fetch(`${API_BASE}/agent/run`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ user_request: userRequest, session_id: sessionId })
+    body: JSON.stringify({ user_request: userRequest, session_id: sessionId, action_override: actionOverride })
   });
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({ detail: 'Request failed' }));
@@ -35,11 +35,11 @@ export async function runAgentRequest(userRequest, sessionId) {
   return res.json();
 }
 
-export async function runDirectGatewayRequest(toolName, argumentsObj, sessionId) {
+export async function runDirectGatewayRequest(toolName, argumentsObj, sessionId, actionOverride = null) {
   const res = await fetch(`${API_BASE}/gateway/process`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ tool_name: toolName, arguments: argumentsObj, session_id: sessionId })
+    body: JSON.stringify({ tool_name: toolName, arguments: argumentsObj, session_id: sessionId, action_override: actionOverride })
   });
   if (!res.ok) {
     const errorData = await res.json().catch(() => ({ detail: 'Direct invocation failed' }));

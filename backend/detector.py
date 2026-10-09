@@ -223,7 +223,7 @@ class PIIDetector:
             {
                 "entity_type": "CREDIT_CARD",
                 "pattern": re.compile(r"\b(?:\d{4}[-\s]?(?:[0-9xX]{4}[-\s]?){2}\d{4}|\d{13,19})\b"),
-                "score": 0.98,
+                "score": 0.99,
             },
             {
                 "entity_type": "SYNTHETIC_ID",
@@ -355,10 +355,10 @@ class PIIDetector:
         if not results:
             return []
 
-        # Sort by score desc, length desc
+        # Sort by length desc, then score desc
         sorted_res = sorted(
             results,
-            key=lambda x: (x.score, x.end - x.start),
+            key=lambda x: (x.end - x.start, x.score),
             reverse=True,
         )
 
@@ -404,7 +404,7 @@ class PIIDetector:
         sorted_results = sorted(results, key=lambda x: x.start, reverse=True)
         anonymized = text
         for span in sorted_results:
-            placeholder = f"<{span.entity_type}>"
+            placeholder = f"[REDACTED_{span.entity_type}]"
             anonymized = anonymized[:span.start] + placeholder + anonymized[span.end:]
         return anonymized
 

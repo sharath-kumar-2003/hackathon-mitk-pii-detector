@@ -59,11 +59,13 @@ evaluation_runner = EvaluationRunner(gateway, vault, tokenizer, perf_tracker)
 class AgentRequest(BaseModel):
     user_request: str
     session_id: Optional[str] = "session_default"
+    action_override: Optional[str] = None
 
 class DirectToolRequest(BaseModel):
     tool_name: str
     arguments: Dict[str, Any]
     session_id: Optional[str] = "session_default"
+    action_override: Optional[str] = None
 
 class RestorationRequest(BaseModel):
     token: str
@@ -84,7 +86,8 @@ def run_agent(req: AgentRequest):
         tool_name=tool_request["tool_name"],
         arguments=tool_request["arguments"],
         session_id=tool_request["session_id"],
-        user_prompt_preview=req.user_request
+        user_prompt_preview=req.user_request,
+        action_override=req.action_override
     )
     return {
         "user_request": req.user_request,
@@ -98,7 +101,8 @@ def process_direct_tool(req: DirectToolRequest):
         tool_name=req.tool_name,
         arguments=req.arguments,
         session_id=req.session_id,
-        user_prompt_preview=f"Direct invocation of {req.tool_name}"
+        user_prompt_preview=f"Direct invocation of {req.tool_name}",
+        action_override=req.action_override
     )
 
 @app.post("/api/evaluation/run")
