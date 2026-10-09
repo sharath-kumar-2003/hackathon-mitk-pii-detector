@@ -11,35 +11,18 @@ const SAMPLE_PROMPTS = [
 
 const DIRECT_TOOLS = ['web_search', 'send_email', 'customer_lookup', 'internal_audit_tool', 'document_summarizer'];
 
-const ACTION_META = {
-  redact:   { bg: '#3d1f1f', border: '#8b2020', text: '#f87171', label: 'REDACT' },
-  tokenize: { bg: '#1a2a3d', border: '#1e4db7', text: '#60a5fa', label: 'TOKENIZE' },
-  allow:    { bg: '#1a2d1a', border: '#16a34a', text: '#4ade80', label: 'ALLOW' },
-  block:    { bg: '#2d1a1a', border: '#b91c1c', text: '#ef4444', label: 'BLOCK' },
-};
-
 function ActionBadge({ action, decision }) {
   const key = (action || decision || '').toLowerCase();
-  const m = ACTION_META[key] || { bg: '#1a1a2e', border: '#444', text: '#aaa', label: (decision || action || '').toUpperCase() };
-  return (
-    <span style={{
-      background: m.bg, border: `1px solid ${m.border}`, color: m.text,
-      borderRadius: '4px', padding: '2px 8px', fontSize: '0.7rem', fontWeight: 700,
-      letterSpacing: '0.04em', display: 'inline-block',
-    }}>{m.label}</span>
-  );
-}
-
-function DecisionBadge({ decision }) {
   const map = {
-    BLOCK: 'badge-danger', BLOCKED: 'badge-danger',
-    TOKENIZE: 'badge-info', REDACT: 'badge-warning',
-    ALLOW: 'badge-success', ALLOWED: 'badge-success',
+    block: 'badge-danger',
+    redact: 'badge-warning',
+    tokenize: 'badge-info',
+    allow: 'badge-success',
   };
-  return <span className={`badge ${map[decision] || 'badge-neutral'}`}>{decision}</span>;
+  const cls = map[key] || 'badge-neutral';
+  return <span className={`badge ${cls}`}>{(decision || action || '').toUpperCase()}</span>;
 }
 
-/** Original text: highlights PII values in red */
 function HighlightedOriginal({ text, piiEntities }) {
   if (!text || typeof text !== 'string') return <span style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>—</span>;
   if (!piiEntities || piiEntities.length === 0) {
@@ -84,12 +67,12 @@ function HighlightedOriginal({ text, piiEntities }) {
   if (cursor < text.length) parts.push({ text: text.slice(cursor), pii: false });
 
   return (
-    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', lineHeight: 1.7, whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', lineHeight: 1.6, whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
       {parts.map((p, i) =>
         p.pii ? (
           <mark key={i} style={{
-            background: 'rgba(239,68,68,0.22)', color: '#f87171',
-            borderRadius: '2px', padding: '0 2px', border: '1px solid rgba(239,68,68,0.4)',
+            background: 'rgba(244,63,94,0.15)', color: '#f43f5e',
+            borderRadius: '2px', padding: '0 3px', border: '1px solid rgba(244,63,94,0.3)',
           }} title={p.type}>{p.text}</mark>
         ) : (
           <span key={i} style={{ color: 'var(--text-secondary)' }}>{p.text}</span>
@@ -99,7 +82,6 @@ function HighlightedOriginal({ text, piiEntities }) {
   );
 }
 
-/** Sanitized text: highlights <ENTITY_TYPE> placeholders in amber (redact) or TOK_ tokens in blue (tokenize) */
 function SanitizedOutput({ action, text }) {
   if (!text) return <span style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>—</span>;
   const str = typeof text === 'string' ? text : JSON.stringify(text, null, 2);
@@ -107,13 +89,13 @@ function SanitizedOutput({ action, text }) {
   if (action === 'redact') {
     const parts = str.split(/(\[REDACTED_[A-Z_]+\])/g);
     return (
-      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', lineHeight: 1.7, whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', lineHeight: 1.6, whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
         {parts.map((p, i) =>
           /^\[REDACTED_[A-Z_]+\]$/.test(p) ? (
             <mark key={i} style={{
-              background: 'rgba(251,191,36,0.2)', color: '#fbbf24',
-              borderRadius: '3px', padding: '0 4px', border: '1px solid rgba(251,191,36,0.45)',
-              fontWeight: 700, fontSize: '0.72rem',
+              background: 'rgba(251,191,36,0.12)', color: '#fbbf24',
+              borderRadius: '3px', padding: '0 4px', border: '1px solid rgba(251,191,36,0.3)',
+              fontWeight: 600, fontSize: '0.72rem',
             }}>{p}</mark>
           ) : (
             <span key={i} style={{ color: 'var(--text-secondary)' }}>{p}</span>
@@ -126,13 +108,13 @@ function SanitizedOutput({ action, text }) {
   if (action === 'tokenize') {
     const parts = str.split(/(<[A-Z0-9_]+>)/g);
     return (
-      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', lineHeight: 1.7, whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', lineHeight: 1.6, whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
         {parts.map((p, i) =>
           /^<[A-Z0-9_]+>$/.test(p) ? (
             <mark key={i} style={{
-              background: 'rgba(96,165,250,0.15)', color: '#60a5fa',
-              borderRadius: '3px', padding: '0 4px', border: '1px solid rgba(96,165,250,0.35)',
-              fontWeight: 700, fontSize: '0.72rem',
+              background: 'rgba(56,189,248,0.12)', color: '#38bdf8',
+              borderRadius: '3px', padding: '0 4px', border: '1px solid rgba(56,189,248,0.3)',
+              fontWeight: 600, fontSize: '0.72rem',
             }}>{p}</mark>
           ) : (
             <span key={i} style={{ color: 'var(--text-secondary)' }}>{p}</span>
@@ -190,10 +172,10 @@ export default function TestLab({ onRefreshAll }) {
 
   return (
     <div>
-      {/* ── Input Card ───────────────────────────────── */}
+      {/* Input Card */}
       <div className="card">
         <div className="card-header">
-          <span className="card-title">Security Gateway — Interactive Test Lab</span>
+          <span className="card-title">Interactive Test Lab</span>
           <span className="badge badge-success">Firewall Active</span>
         </div>
 
@@ -245,7 +227,7 @@ export default function TestLab({ onRefreshAll }) {
             </div>
             <div style={{ marginTop: '1.25rem' }}>
               <button className="btn btn-primary" type="submit" disabled={loading}>
-                {loading ? '⏳ Processing...' : '▶ Execute Pipeline'}
+                {loading ? 'Processing...' : 'Run Pipeline'}
               </button>
             </div>
           </div>
@@ -256,7 +238,7 @@ export default function TestLab({ onRefreshAll }) {
             <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', alignSelf: 'center', marginRight: '0.25rem' }}>Presets:</span>
             {SAMPLE_PROMPTS.map((s, i) => (
               <button key={i} className="btn btn-secondary"
-                style={{ fontSize: '0.725rem', padding: '0.25rem 0.5rem' }}
+                style={{ fontSize: '0.725rem', padding: '0.2rem 0.5rem' }}
                 onClick={() => setPrompt(s.value)}>{s.label}</button>
             ))}
           </div>
@@ -265,13 +247,13 @@ export default function TestLab({ onRefreshAll }) {
 
       {error && (
         <div className="card" style={{ borderColor: 'var(--danger-border)', backgroundColor: 'var(--danger-bg)' }}>
-          <div style={{ color: 'var(--danger)', fontWeight: 500, fontSize: '0.825rem' }}>⚠ Error: {error}</div>
+          <div style={{ color: 'var(--danger)', fontWeight: 500, fontSize: '0.825rem' }}>Error: {error}</div>
         </div>
       )}
 
       {result && gw && (
         <div>
-          {/* ── Summary Metrics ─────────────────────── */}
+          {/* Summary Metrics */}
           <div className="grid-cols-4" style={{ marginBottom: '1.25rem' }}>
             <div className="metric-card">
               <div className="metric-label">Request ID</div>
@@ -279,109 +261,73 @@ export default function TestLab({ onRefreshAll }) {
             </div>
             <div className="metric-card">
               <div className="metric-label">Firewall Action</div>
-              <ActionBadge action={action} decision={gw.decision} />
+              <div><ActionBadge action={action} decision={gw.decision} /></div>
             </div>
             <div className="metric-card">
               <div className="metric-label">PII Detected</div>
-              <div className="metric-value" style={{ color: piiDetected.length > 0 ? '#f87171' : '#4ade80' }}>
+              <div className="metric-value">
                 {piiDetected.length}
               </div>
             </div>
             <div className="metric-card">
               <div className="metric-label">Leakage Check</div>
-              <span className={`badge ${gw.outbound_verification?.passed ? 'badge-success' : 'badge-danger'}`}>
-                {gw.outbound_verification?.passed ? '✓ Passed' : '✗ Breach'}
-              </span>
+              <div>
+                <span className={`badge ${gw.outbound_verification?.passed ? 'badge-success' : 'badge-danger'}`}>
+                  {gw.outbound_verification?.passed ? 'Passed' : 'Breach Detected'}
+                </span>
+              </div>
             </div>
           </div>
 
-          {/* ── Redaction / Tokenization Visualizer ─── */}
+          {/* Redaction / Tokenization Visualizer */}
           {piiDetected.length > 0 && (action === 'redact' || action === 'tokenize') && (
-            <div className="card" style={{
-              border: `1px solid ${action === 'redact' ? 'rgba(139,32,32,0.6)' : 'rgba(30,77,183,0.55)'}`,
-              background: action === 'redact' ? 'rgba(61,31,31,0.2)' : 'rgba(26,42,61,0.2)',
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <span style={{ fontSize: '1.1rem' }}>{action === 'redact' ? '🛡️' : '🔐'}</span>
-                  <span style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--text-primary)' }}>
-                    {action === 'redact' ? 'Redaction Applied' : 'Tokenization Applied'}
-                  </span>
-                  <ActionBadge action={action} />
-                </div>
-                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                  {piiDetected.length} PII field{piiDetected.length !== 1 ? 's' : ''} protected
+            <div className="card">
+              <div className="card-header">
+                <span className="card-title">
+                  {action === 'redact' ? 'Redaction Transformation' : 'Tokenization Transformation'}
                 </span>
+                <ActionBadge action={action} />
               </div>
 
               {/* Side-by-side diff */}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <div>
-                  <div style={{ fontSize: '0.7rem', fontWeight: 700, color: '#f87171', marginBottom: '0.4rem', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
-                    ⚠ Original — PII Exposed
+                  <div style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                    Original Payload (PII Exposed)
                   </div>
-                  <div style={{ background: 'var(--bg-code)', borderRadius: '6px', padding: '0.75rem', border: '1px solid rgba(239,68,68,0.25)', minHeight: '80px' }}>
+                  <div style={{ background: 'var(--bg-dark)', borderRadius: '6px', padding: '0.75rem', border: '1px solid var(--border-color)', minHeight: '80px' }}>
                     <HighlightedOriginal text={originalStr} piiEntities={piiDetected} />
-                  </div>
-                  <div style={{ marginTop: '0.4rem', display: 'flex', flexWrap: 'wrap', gap: '0.25rem' }}>
-                    {[...new Set(piiDetected.map(p => p.entity_type))].map((t, i) => (
-                      <span key={i} style={{
-                        background: 'rgba(239,68,68,0.12)', color: '#f87171',
-                        border: '1px solid rgba(239,68,68,0.3)', borderRadius: '3px',
-                        padding: '1px 6px', fontSize: '0.67rem', fontWeight: 600,
-                      }}>{t}</span>
-                    ))}
                   </div>
                 </div>
 
                 <div>
-                  <div style={{
-                    fontSize: '0.7rem', fontWeight: 700,
-                    color: action === 'redact' ? '#fbbf24' : '#60a5fa',
-                    marginBottom: '0.4rem', letterSpacing: '0.04em', textTransform: 'uppercase',
-                  }}>
-                    ✓ {action === 'redact' ? 'After Redaction — Safe' : 'After Tokenization — Safe'}
+                  <div style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                    Sanitized Payload (Safe)
                   </div>
-                  <div style={{
-                    background: 'var(--bg-code)', borderRadius: '6px', padding: '0.75rem',
-                    border: `1px solid ${action === 'redact' ? 'rgba(251,191,36,0.25)' : 'rgba(96,165,250,0.25)'}`,
-                    minHeight: '80px',
-                  }}>
+                  <div style={{ background: 'var(--bg-dark)', borderRadius: '6px', padding: '0.75rem', border: '1px solid var(--border-color)', minHeight: '80px' }}>
                     <SanitizedOutput action={action} text={gw.sanitized_arguments} />
                   </div>
-                  <div style={{ marginTop: '0.4rem', fontSize: '0.71rem', color: 'var(--text-muted)' }}>
-                    {action === 'redact'
-                      ? '🟡 PII replaced with <ENTITY_TYPE> placeholders — irreversible'
-                      : '🔵 PII replaced with reversible tokens — restorable by authorized system'}
-                  </div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* ── Block / Allow banner ─────────────────── */}
+          {/* Block / Allow banner */}
           {(action === 'block' || (action !== 'redact' && action !== 'tokenize')) && (
-            <div className="card" style={{
-              border: `1px solid ${action === 'block' ? 'rgba(185,28,28,0.5)' : 'rgba(22,163,74,0.4)'}`,
-              background: action === 'block' ? 'rgba(45,26,26,0.3)' : 'rgba(26,45,26,0.3)',
-              display: 'flex', alignItems: 'center', gap: '0.75rem',
-            }}>
-              <span style={{ fontSize: '1.4rem' }}>{action === 'block' ? '🚫' : '✅'}</span>
-              <div>
-                <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '0.2rem' }}>
-                  {action === 'block' ? 'Request Blocked by Policy' : piiDetected.length === 0 ? 'No PII Detected — Passed Through' : 'Allowed'}
-                </div>
-                <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{gw.reason}</div>
+            <div className="card">
+              <div style={{ fontWeight: 600, fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '0.2rem' }}>
+                {action === 'block' ? 'Request Blocked by Policy' : piiDetected.length === 0 ? 'No PII Detected — Passed Through' : 'Allowed'}
               </div>
+              <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{gw.reason}</div>
             </div>
           )}
 
-          {/* ── Pipeline Steps ───────────────────────── */}
+          {/* Pipeline Steps */}
           <div className="grid-cols-2">
             {result.tool_request && (
               <div className="card">
                 <div className="card-header">
-                  <span className="card-title">1️⃣ Agent Tool Call (Original)</span>
+                  <span className="card-title">1. Agent Tool Call</span>
                   <code style={{ fontSize: '0.75rem' }}>{result.tool_request.tool_name}</code>
                 </div>
                 <pre className="code-block">{JSON.stringify(result.tool_request.arguments, null, 2)}</pre>
@@ -390,7 +336,7 @@ export default function TestLab({ onRefreshAll }) {
 
             <div className="card">
               <div className="card-header">
-                <span className="card-title">2️⃣ Sanitized Outgoing Payload</span>
+                <span className="card-title">2. Sanitized Outgoing Payload</span>
                 <ActionBadge action={action} decision={gw.action?.toUpperCase?.()} />
               </div>
               <div className="code-block" style={{ minHeight: '80px' }}>
@@ -400,34 +346,29 @@ export default function TestLab({ onRefreshAll }) {
 
             <div className="card">
               <div className="card-header">
-                <span className="card-title">3️⃣ Payload Received by Mock Tool</span>
-                <span style={{ fontSize: '0.725rem', color: 'var(--text-muted)' }}>Evidence</span>
+                <span className="card-title">3. Payload Received by Mock Tool</span>
               </div>
               <pre className="code-block">{JSON.stringify(gw.received_by_mock_tool, null, 2)}</pre>
             </div>
 
             <div className="card">
               <div className="card-header">
-                <span className="card-title">4️⃣ Tool Output & Restoration</span>
+                <span className="card-title">4. Tool Output & Restoration</span>
               </div>
               <pre className="code-block">{JSON.stringify(gw.mock_tool_output, null, 2)}</pre>
               {gw.restoration_result?.tokens_found?.length > 0 && (
-                <div style={{
-                  marginTop: '0.65rem', padding: '0.5rem 0.75rem',
-                  background: 'rgba(96,165,250,0.1)', borderRadius: '4px',
-                  border: '1px solid rgba(96,165,250,0.25)', fontSize: '0.775rem', color: '#60a5fa',
-                }}>
-                  🔓 <strong>Restoration:</strong> {gw.restoration_result.tokens_found.length} token(s) resolved to original values.
+                <div style={{ marginTop: '0.65rem', padding: '0.4rem 0.65rem', background: 'var(--bg-subtle)', border: '1px solid var(--border-color)', borderRadius: '4px', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
+                  Restoration: {gw.restoration_result.tokens_found.length} token(s) resolved to original values.
                 </div>
               )}
             </div>
           </div>
 
-          {/* ── PII Breakdown Table ──────────────────── */}
+          {/* PII Breakdown Table */}
           {piiDetected.length > 0 && (
             <div className="card">
               <div className="card-header">
-                <span className="card-title">🔍 Detected PII Breakdown</span>
+                <span className="card-title">Detected PII Breakdown</span>
                 <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{piiDetected.length} field{piiDetected.length !== 1 ? 's' : ''}</span>
               </div>
               <div style={{ overflowX: 'auto' }}>
@@ -441,24 +382,15 @@ export default function TestLab({ onRefreshAll }) {
                   </thead>
                   <tbody>
                     {piiDetected.map((p, i) => (
-                      <tr key={i} style={{ borderBottom: '1px solid var(--border-subtle)', background: i % 2 === 0 ? 'transparent' : 'rgba(255,255,255,0.015)' }}>
+                      <tr key={i} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
                         <td style={{ padding: '0.4rem 0.6rem' }}>
-                          <span style={{
-                            background: 'rgba(239,68,68,0.12)', color: '#f87171',
-                            border: '1px solid rgba(239,68,68,0.3)', borderRadius: '3px',
-                            padding: '1px 6px', fontSize: '0.68rem', fontWeight: 600,
-                          }}>{p.entity_type}</span>
+                          <span className="badge badge-neutral">{p.entity_type}</span>
                         </td>
                         <td style={{ padding: '0.4rem 0.6rem', fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)', maxWidth: '240px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                           {p.value}
                         </td>
                         <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-muted)' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                            <div style={{ width: '60px', height: '4px', background: 'var(--border-subtle)', borderRadius: '2px', overflow: 'hidden' }}>
-                              <div style={{ width: `${(p.score || 0.9) * 100}%`, height: '100%', background: '#4ade80', borderRadius: '2px' }} />
-                            </div>
-                            <span>{Math.round((p.score || 0.9) * 100)}%</span>
-                          </div>
+                          {Math.round((p.score || 0.9) * 100)}%
                         </td>
                         <td style={{ padding: '0.4rem 0.6rem' }}>
                           <ActionBadge action={action} decision={action.toUpperCase()} />
@@ -471,12 +403,12 @@ export default function TestLab({ onRefreshAll }) {
             </div>
           )}
 
-          {/* ── Leakage Verification ─────────────────── */}
+          {/* Leakage Verification */}
           <div className="card">
             <div className="card-header">
-              <span className="card-title">🔒 Outbound Leakage Verification</span>
+              <span className="card-title">Outbound Leakage Verification</span>
               <span className={`badge ${gw.outbound_verification?.passed ? 'badge-success' : 'badge-danger'}`}>
-                {gw.outbound_verification?.passed ? '✓ No Leakage' : '✗ Breach Detected'}
+                {gw.outbound_verification?.passed ? 'Passed' : 'Breach Detected'}
               </span>
             </div>
             <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>
