@@ -1,0 +1,376 @@
+"""
+AI-Powered PII Detector using Google Gemini API.
+
+Uses Gemini's language understanding to detect PII entities in text
+with high accuracy, including contextual and paraphrased PII that
+regex-only systems miss.
+
+Maintains the exact same public API as the previous detector so
+gateway.py, tokenizer.py, and all consumers work without changes.
+"""
+
+import re
+import os
+import json
+from dataclasses import dataclass
+from typing import Dict, Any, List, Optional
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+from google import genai
+from google.genai import types
+
+
+@dataclass
+class PIISpan:
+    """Lightweight span result compatible with the existing pipeline.
+
+    Mimics the Presidio RecognizerResult interface so that gateway.py
+    and tokenizer.py can consume these without any changes.
+    """
+    entity_type: str
+    start: int
+    end: int
+    score: float
+
+
+# System prompt for Gemini PII detection
+PII_SYSTEM_PROMPT = """You are a PII (Personally Identifiable Information) detection engine.
+Your task is to find ALL PII entities in the given text.
+
+Detect these PII types:
+- PERSON: Full names, first names, last names
+- EMAIL_ADDRESS: Email addresses
+- PHONE_NUMBER: Phone numbers (any format, including Indian +91)
+- CREDIT_CARD: Credit card numbers, debit card numbers, ATM card numbers (15-19 digits, with or without spaces/dashes)
+- CARD_PIN: ATM PIN, debit card PIN, credit card PIN, CVV / CVC numbers, OTPs, security passcodes (usually 3 to 6 digits)
+- US_SSN: US Social Security Numbers (XXX-XX-XXXX)
+- IN_AADHAAR: Indian Aadhaar numbers (12 digits, may have spaces)
+- IN_PAN: Indian PAN card numbers (ABCDE1234F format)
+- LOCATION: Cities, states, countries, addresses
+- ORGANIZATION: Company names, institution names
+- IP_ADDRESS: IP addresses
+- URL: Web URLs
+- DATE_OF_BIRTH: Dates that represent birthdays
+- MEDICAL_LICENSE: Medical license numbers
+- PASSPORT: Passport numbers
+- DRIVER_LICENSE: Driver's license numbers
+- BANK_ACCOUNT: Bank account numbers, IFSC codes, IBAN numbers
+- SYNTHETIC_ID: Synthetic test IDs (SYNTH-ID-xxxx, AUTH-KEY-xxxx, USER-REF-xxxx)
+
+Respond ONLY with a JSON array. Each element must have:
+- "entity_type": one of the types above
+- "value": the exact text substring (must be an exact match from the input)
+- "score": confidence score between 0.0 and 1.0
+
+If no PII is found, return an empty array: []
+
+CRITICAL RULES:
+- The "value" field MUST be an exact substring of the input text (character-for-character match)
+- For PINs, ATM PINs, CVVs, and card numbers, capture the exact digits/number
+- Do NOT paraphrase, reformat, or modify the value in any way
+- Do NOT include any explanation, only the JSON array
+- Be thorough — detect ALL instances of PII, even if there are many"""
+
+
+ENTITY_TYPE_MAP = {
+    "NAME": "PERSON",
+    "PERSON": "PERSON",
+    "PERSON_NAME": "PERSON",
+    "FIRST_NAME": "PERSON",
+    "LAST_NAME": "PERSON",
+    "EMAIL": "EMAIL_ADDRESS",
+    "EMAIL_ADDRESS": "EMAIL_ADDRESS",
+    "PHONE": "PHONE_NUMBER",
+    "PHONE_NUMBER": "PHONE_NUMBER",
+    "MOBILE": "PHONE_NUMBER",
+    "AADHAAR": "IN_AADHAAR",
+    "AADHAAR_NUMBER": "IN_AADHAAR",
+    "IN_AADHAAR": "IN_AADHAAR",
+    "PAN": "IN_PAN",
+    "PAN_NUMBER": "IN_PAN",
+    "IN_PAN": "IN_PAN",
+    "SSN": "US_SSN",
+    "US_SSN": "US_SSN",
+    "CREDIT_CARD": "CREDIT_CARD",
+    "DEBIT_CARD": "CREDIT_CARD",
+    "DEBIT_CARD_NUMBER": "CREDIT_CARD",
+    "ATM_CARD": "CREDIT_CARD",
+    "ATM_CARD_NUMBER": "CREDIT_CARD",
+    "CARD_NUMBER": "CREDIT_CARD",
+    "PAYMENT_CARD": "CREDIT_CARD",
+    "ATM_PIN": "CARD_PIN",
+    "CARD_PIN": "CARD_PIN",
+    "DEBIT_PIN": "CARD_PIN",
+    "DEBIT_CARD_PIN": "CARD_PIN",
+    "PIN": "CARD_PIN",
+    "PIN_NUMBER": "CARD_PIN",
+    "CVV": "CARD_PIN",
+    "CVV_NUMBER": "CARD_PIN",
+    "CVC": "CARD_PIN",
+    "OTP": "CARD_PIN",
+    "PASSCODE": "CARD_PIN",
+    "SECURITY_CODE": "CARD_PIN",
+    "LOCATION": "LOCATION",
+    "ADDRESS": "LOCATION",
+    "CITY": "LOCATION",
+    "ORGANIZATION": "ORGANIZATION",
+    "COMPANY": "ORGANIZATION",
+    "IP_ADDRESS": "IP_ADDRESS",
+    "URL": "URL",
+    "DATE_OF_BIRTH": "DATE_OF_BIRTH",
+    "DOB": "DATE_OF_BIRTH",
+    "BANK_ACCOUNT": "BANK_ACCOUNT",
+    "SYNTHETIC_ID": "SYNTHETIC_ID",
+}
+
+
+class PIIDetector:
+    """AI-powered PII detector using Google Gemini API with regex augmentation.
+
+    Detection Strategy:
+      1. Google Gemini API (gemini-3.5-flash-lite) for deep contextual PII detection
+         - Detects: All PII types including contextual/paraphrased data
+      2. Regex patterns as fast fallback for structured PII formats
+         - Detects: Email, Phone, Credit/Debit Cards, PINs, SSN, Aadhaar, PAN, IPs, URLs, Synthetic IDs
+      3. Graceful degradation: if Gemini API fails, falls back to regex-only
+    """
+
+    def __init__(self):
+        api_key = os.environ.get("GEMINI_API_KEY", "")
+        self.model_name = os.environ.get("GEMINI_MODEL", "gemini-3.5-flash-lite")
+        if not api_key:
+            print("[PIIDetector] WARNING: GEMINI_API_KEY not set. Will use regex-only detection.")
+            print("[PIIDetector] Set GEMINI_API_KEY in your .env or environment variables.")
+            self.client = None
+        else:
+            try:
+                self.client = genai.Client(api_key=api_key)
+                print(f"[PIIDetector] Google Gemini AI detector ({self.model_name}) initialized successfully.")
+            except Exception as e:
+                print(f"[PIIDetector] Failed to initialize Gemini client: {e}. Falling back to regex.")
+                self.client = None
+
+        # Regex patterns for structured PII (fast fallback + augmentation)
+        self.regex_patterns: List[Dict[str, Any]] = [
+            {
+                "entity_type": "EMAIL_ADDRESS",
+                "pattern": re.compile(r"\b[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}\b"),
+                "score": 0.95,
+            },
+            {
+                "entity_type": "PHONE_NUMBER",
+                "pattern": re.compile(r"\b(?:\+91[\-\s]?)?[6-9]\d{9}\b|\b\d{5}\s?\d{5}\b"),
+                "score": 0.95,
+            },
+            {
+                "entity_type": "CREDIT_CARD",
+                "pattern": re.compile(r"\b(?:\d{4}[\s\-]?){3}\d{4}\b|\b(?:\d[ -]*?){13,19}\b"),
+                "score": 0.90,
+            },
+            {
+                "entity_type": "CARD_PIN",
+                "pattern": re.compile(r"(?i)\b(?:pin|atm\s*pin|debit\s*card\s*pin|debit\s*pin|card\s*pin|cvv|cvc|otp|secret\s*pin)[:\s=]*(\d{3,6})\b"),
+                "score": 0.95,
+                "group": 1,
+            },
+            {
+                "entity_type": "US_SSN",
+                "pattern": re.compile(r"\b\d{3}-\d{2}-\d{4}\b"),
+                "score": 0.95,
+            },
+            {
+                "entity_type": "IN_AADHAAR",
+                "pattern": re.compile(r"\b\d{4}\s?\d{4}\s?\d{4}\b"),
+                "score": 0.90,
+            },
+            {
+                "entity_type": "IN_PAN",
+                "pattern": re.compile(r"\b[A-Z]{5}\d{4}[A-Z]{1}\b"),
+                "score": 0.90,
+            },
+            {
+                "entity_type": "IP_ADDRESS",
+                "pattern": re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}\b"),
+                "score": 0.85,
+            },
+            {
+                "entity_type": "URL",
+                "pattern": re.compile(r"https?://[^\s]+"),
+                "score": 0.85,
+            },
+            {
+                "entity_type": "SYNTHETIC_ID",
+                "pattern": re.compile(r"\b(?:SYNTH-ID|AUTH-KEY|USER-REF)-\d+\b"),
+                "score": 0.95,
+            },
+        ]
+
+    def _call_gemini(self, text: str) -> List[PIISpan]:
+        """Call Google Gemini API to detect PII entities in text."""
+        if not self.client:
+            return []
+
+        try:
+            config = types.GenerateContentConfig(
+                system_instruction=PII_SYSTEM_PROMPT,
+                temperature=0.0,
+                max_output_tokens=4096,
+                response_mime_type="application/json",
+            )
+            response = self.client.models.generate_content(
+                model=self.model_name,
+                contents=text,
+                config=config,
+            )
+            raw = (response.text or "").strip()
+
+            if not raw:
+                return []
+
+            # Strip markdown code fences if present
+            if raw.startswith("```"):
+                raw = re.sub(r"^```(?:json)?\s*", "", raw)
+                raw = re.sub(r"\s*```$", "", raw)
+
+            entities = json.loads(raw)
+
+            if not isinstance(entities, list):
+                return []
+
+            spans: List[PIISpan] = []
+            for ent in entities:
+                value = ent.get("value", "")
+                raw_type = str(ent.get("entity_type", "PII")).upper()
+                entity_type = ENTITY_TYPE_MAP.get(raw_type, raw_type)
+                score = float(ent.get("score", 0.90))
+
+                if not value or not isinstance(value, str):
+                    continue
+
+                # Find all occurrences of this value in text
+                escaped = re.escape(value)
+                matches = list(re.finditer(escaped, text, flags=re.IGNORECASE))
+                if not matches:
+                    continue
+
+                for m in matches:
+                    spans.append(PIISpan(
+                        entity_type=entity_type,
+                        start=m.start(),
+                        end=m.end(),
+                        score=round(score, 4),
+                    ))
+
+            return spans
+
+        except Exception as e:
+            print(f"[PIIDetector] Gemini API call failed: {e}")
+            return []
+
+    def _run_regex(self, text: str) -> List[PIISpan]:
+        """Run regex-based pattern matching for structured PII formats."""
+        spans = []
+        for rule in self.regex_patterns:
+            group_idx = rule.get("group", 0)
+            for match in rule["pattern"].finditer(text):
+                start = match.start(group_idx)
+                end = match.end(group_idx)
+                if start != -1 and end != -1:
+                    spans.append(PIISpan(
+                        entity_type=rule["entity_type"],
+                        start=start,
+                        end=end,
+                        score=rule["score"],
+                    ))
+        return spans
+
+    def deduplicate_spans(self, results: List[PIISpan]) -> List[PIISpan]:
+        """Filters out overlapping span results, retaining the highest scoring / longest match."""
+        if not results:
+            return []
+
+        # Sort by score desc, length desc
+        sorted_res = sorted(
+            results,
+            key=lambda x: (x.score, x.end - x.start),
+            reverse=True,
+        )
+
+        deduped: List[PIISpan] = []
+        for r in sorted_res:
+            overlap = False
+            for existing in deduped:
+                if not (r.end <= existing.start or r.start >= existing.end):
+                    overlap = True
+                    break
+            if not overlap:
+                deduped.append(r)
+
+        return sorted(deduped, key=lambda x: x.start)
+
+    def analyze_text(self, text: str) -> List[PIISpan]:
+        """Detect PII in text using Google Gemini AI + regex patterns.
+
+        Returns a list of PIISpan objects compatible with the gateway
+        and tokenizer pipelines.
+        """
+        if not text or not isinstance(text, str):
+            return []
+
+        # Run both detection strategies in parallel
+        gemini_spans = self._call_gemini(text)
+        regex_spans = self._run_regex(text)
+
+        # Merge: Gemini results first (higher quality), then regex
+        all_spans = gemini_spans + regex_spans
+        return self.deduplicate_spans(all_spans)
+
+    def anonymize_text(self, text: str, results: Optional[List[PIISpan]] = None) -> str:
+        """Replace detected PII spans with redaction placeholders like <PERSON>, <EMAIL_ADDRESS>."""
+        if not text or not isinstance(text, str):
+            return text
+        if results is None:
+            results = self.analyze_text(text)
+        if not results:
+            return text
+
+        # Sort descending by start to avoid index shifting
+        sorted_results = sorted(results, key=lambda x: x.start, reverse=True)
+        anonymized = text
+        for span in sorted_results:
+            placeholder = f"<{span.entity_type}>"
+            anonymized = anonymized[:span.start] + placeholder + anonymized[span.end:]
+        return anonymized
+
+    def extract_pii_entities(self, text: str) -> List[Dict[str, Any]]:
+        """Returns structured dicts of detected PII with type, value, start, end, score."""
+        results = self.analyze_text(text)
+        entities = []
+        for r in results:
+            entities.append({
+                "entity_type": r.entity_type,
+                "value": text[r.start:r.end],
+                "start": r.start,
+                "end": r.end,
+                "score": round(r.score, 2),
+            })
+        return entities
+
+    def analyze_payload(self, data: Any) -> List[Dict[str, Any]]:
+        """Recursively scans dicts/lists for string values containing PII."""
+        detected: List[Dict[str, Any]] = []
+        if isinstance(data, str):
+            entities = self.extract_pii_entities(data)
+            detected.extend(entities)
+        elif isinstance(data, dict):
+            for k, v in data.items():
+                detected.extend(self.analyze_payload(v))
+        elif isinstance(data, list):
+            for item in data:
+                detected.extend(self.analyze_payload(item))
+        return detected

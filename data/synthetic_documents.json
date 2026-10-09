@@ -1,0 +1,10 @@
+[
+  {
+    "id": "doc_1",
+    "content": "The meeting was attended by John Doe (johndoe@example.com). They discussed project X."
+  },
+  {
+    "id": "doc_2",
+    "content": "Confidential: Salary for Bhavani Sha has been updated to 50000. Phone: 8872874315."
+  }
+]

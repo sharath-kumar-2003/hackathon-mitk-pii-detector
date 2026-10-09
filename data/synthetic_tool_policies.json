@@ -1,0 +1,66 @@
+[
+  {
+    "tool_name": "web_search",
+    "permitted_fields": [
+      "query"
+    ],
+    "redact_pii_in": [
+      "query"
+    ],
+    "block_if_unpermitted_field": true,
+    "action": "redact",
+    "description": "Public search tool. Redacts all PII in search query before forwarding to search engine."
+  },
+  {
+    "tool_name": "send_email",
+    "permitted_fields": [
+      "to",
+      "subject",
+      "body"
+    ],
+    "redact_pii_in": [
+      "body"
+    ],
+    "block_if_unpermitted_field": true,
+    "action": "tokenize",
+    "description": "Email delivery tool. Tokenizes PII in body so original content can be restored post-delivery."
+  },
+  {
+    "tool_name": "customer_lookup",
+    "permitted_fields": [
+      "customer_id",
+      "fields"
+    ],
+    "redact_pii_in": [],
+    "block_if_unpermitted_field": true,
+    "action": "allow",
+    "description": "Internal CRM lookup tool. Allows querying customer by synthetic customer reference ID only."
+  },
+  {
+    "tool_name": "internal_audit_tool",
+    "permitted_fields": [
+      "report_name",
+      "user_reference",
+      "notes"
+    ],
+    "redact_pii_in": [
+      "notes"
+    ],
+    "block_if_unpermitted_field": true,
+    "action": "tokenize",
+    "description": "Audit logging tool. Tokenizes sensitive data in notes field for compliance."
+  },
+  {
+    "tool_name": "document_summarizer",
+    "permitted_fields": [
+      "title",
+      "content"
+    ],
+    "redact_pii_in": [
+      "content"
+    ],
+    "block_if_unpermitted_field": true,
+    "action": "redact",
+    "description": "Document summarization tool. Redacts PII in document content before summarization."
+  }
+]

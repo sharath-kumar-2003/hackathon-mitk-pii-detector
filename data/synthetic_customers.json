@@ -1,0 +1,502 @@
+[
+  {
+    "id": "cust_1000",
+    "name": "Aryan Maharaj",
+    "email": "udantdewan@example.net",
+    "phone": "+918196001338",
+    "address": "86/379, Ahuja Road, Bhusawal 423511",
+    "aadhaar": "2824 1409 5506",
+    "pan": "MQZCU6155D",
+    "status": "active"
+  },
+  {
+    "id": "cust_1001",
+    "name": "Kritika Brar",
+    "email": "janaki93@example.net",
+    "phone": "+910341316475",
+    "address": "H.No. 34, Garg Zila, Ujjain-648350",
+    "aadhaar": "4657 3286 2679",
+    "pan": "RENKT3056U",
+    "status": "active"
+  },
+  {
+    "id": "cust_1002",
+    "name": "Xalak Randhawa",
+    "email": "qdhar@example.org",
+    "phone": "+918849696532",
+    "address": "H.No. 122, Bhatt Marg, Eluru-848018",
+    "aadhaar": "7912 1520 1488",
+    "pan": "BKDAU4514U",
+    "status": "active"
+  },
+  {
+    "id": "cust_1003",
+    "name": "Xiti Gokhale",
+    "email": "misrayashica@example.net",
+    "phone": "+912528809570",
+    "address": "H.No. 30, Brar Ganj, Shivpuri 822782",
+    "aadhaar": "4582 4811 9279",
+    "pan": "NIWUS4896M",
+    "status": "active"
+  },
+  {
+    "id": "cust_1004",
+    "name": "Mohini Prakash",
+    "email": "cvarughese@example.org",
+    "phone": "+913150983930",
+    "address": "105, Varkey Zila, Alwar 382997",
+    "aadhaar": "4257 9928 7873",
+    "pan": "GGQBW3763B",
+    "status": "active"
+  },
+  {
+    "id": "cust_1005",
+    "name": "Unni Bhagat",
+    "email": "bhatneha@example.net",
+    "phone": "01333872624",
+    "address": "H.No. 781, Zachariah Nagar, Tiruchirappalli-267736",
+    "aadhaar": "8359 5557 1106",
+    "pan": "YQYYD0260S",
+    "status": "active"
+  },
+  {
+    "id": "cust_1006",
+    "name": "Vidhi Dubey",
+    "email": "chamankalla@example.org",
+    "phone": "8050097882",
+    "address": "191, Raval Ganj, Jehanabad 990916",
+    "aadhaar": "7924 6574 5552",
+    "pan": "QNQTU9985P",
+    "status": "active"
+  },
+  {
+    "id": "cust_1007",
+    "name": "Meghana Deep",
+    "email": "tanvi51@example.org",
+    "phone": "09911838425",
+    "address": "H.No. 42, Mittal Chowk, Begusarai 124118",
+    "aadhaar": "4527 6514 2674",
+    "pan": "NTVNR2449O",
+    "status": "active"
+  },
+  {
+    "id": "cust_1008",
+    "name": "Yashasvi Suresh",
+    "email": "charan16@example.com",
+    "phone": "+910524278680",
+    "address": "28/059, Divan Circle, Warangal 450533",
+    "aadhaar": "7224 2584 6881",
+    "pan": "NVJPK1586Z",
+    "status": "inactive"
+  },
+  {
+    "id": "cust_1009",
+    "name": "Nitara Bakshi",
+    "email": "gaurangisabharwal@example.net",
+    "phone": "3421607337",
+    "address": "303, Narasimhan Marg, Coimbatore 586850",
+    "aadhaar": "5333 1711 8527",
+    "pan": "QCGMB1429W",
+    "status": "active"
+  },
+  {
+    "id": "cust_1010",
+    "name": "Rajata Vaidya",
+    "email": "rajanranveer@example.com",
+    "phone": "+916088356159",
+    "address": "48/465, Merchant Marg, Nellore 629946",
+    "aadhaar": "7201 2291 5803",
+    "pan": "NBYLM8044P",
+    "status": "inactive"
+  },
+  {
+    "id": "cust_1011",
+    "name": "Udyati Sathe",
+    "email": "gkala@example.com",
+    "phone": "2148951343",
+    "address": "H.No. 037, Bora, Vijayanagaram-676320",
+    "aadhaar": "4150 2139 1750",
+    "pan": "ZSHDD1632J",
+    "status": "active"
+  },
+  {
+    "id": "cust_1012",
+    "name": "Jairaj Shan",
+    "email": "ucchalwali@example.net",
+    "phone": "5798687277",
+    "address": "48/734, Brahmbhatt Chowk, Noida 558122",
+    "aadhaar": "5741 2307 4814",
+    "pan": "EAAVI3623D",
+    "status": "active"
+  },
+  {
+    "id": "cust_1013",
+    "name": "David Jhaveri",
+    "email": "xramachandran@example.net",
+    "phone": "0967054668",
+    "address": "467, Ramachandran Nagar, Machilipatnam-729806",
+    "aadhaar": "7227 5554 8428",
+    "pan": "PBIDL9901D",
+    "status": "inactive"
+  },
+  {
+    "id": "cust_1014",
+    "name": "Ladli Narang",
+    "email": "suhaninarain@example.com",
+    "phone": "04641708053",
+    "address": "H.No. 330, Dua, Cuttack 193745",
+    "aadhaar": "3664 7065 6820",
+    "pan": "XKTGL2991B",
+    "status": "active"
+  },
+  {
+    "id": "cust_1015",
+    "name": "Keya Ranganathan",
+    "email": "faqidkibe@example.org",
+    "phone": "4919058651",
+    "address": "71, Pathak Marg, Jamnagar 284987",
+    "aadhaar": "5374 2169 3803",
+    "pan": "UPFRC7694P",
+    "status": "active"
+  },
+  {
+    "id": "cust_1016",
+    "name": "Ladli Nayar",
+    "email": "talwarekta@example.org",
+    "phone": "03545494808",
+    "address": "678, Soni Ganj, Sultan Pur Majra-143634",
+    "aadhaar": "3677 8573 7216",
+    "pan": "HWBVJ9578V",
+    "status": "inactive"
+  },
+  {
+    "id": "cust_1017",
+    "name": "Sudiksha Madan",
+    "email": "zayan31@example.net",
+    "phone": "+915182337498",
+    "address": "435, Mittal Street, Deoghar 400842",
+    "aadhaar": "4598 6313 1916",
+    "pan": "SEECV7109L",
+    "status": "active"
+  },
+  {
+    "id": "cust_1018",
+    "name": "Zayyan Sridhar",
+    "email": "bhattacharyyanandini@example.com",
+    "phone": "+919022941318",
+    "address": "67/74, Sanghvi, Jehanabad-913341",
+    "aadhaar": "1525 6168 7572",
+    "pan": "EKAAC2328S",
+    "status": "inactive"
+  },
+  {
+    "id": "cust_1019",
+    "name": "Bishakha Bali",
+    "email": "bhavyamandal@example.net",
+    "phone": "01349361832",
+    "address": "H.No. 024, Mani, Amravati 464887",
+    "aadhaar": "2084 4456 6155",
+    "pan": "BVUMQ7190B",
+    "status": "active"
+  },
+  {
+    "id": "cust_1020",
+    "name": "Veer Bail",
+    "email": "banjeet27@example.net",
+    "phone": "7429671756",
+    "address": "12/567, Rattan Road, Malda 545168",
+    "aadhaar": "9179 7482 8517",
+    "pan": "DMHXN0876W",
+    "status": "active"
+  },
+  {
+    "id": "cust_1021",
+    "name": "Riya Behl",
+    "email": "amaradeep@example.com",
+    "phone": "07109324808",
+    "address": "171, Tara Street, Danapur-677378",
+    "aadhaar": "5339 3287 5040",
+    "pan": "GVIER2639X",
+    "status": "inactive"
+  },
+  {
+    "id": "cust_1022",
+    "name": "Harini Tripathi",
+    "email": "aarnav44@example.net",
+    "phone": "7278755886",
+    "address": "396, Roy Ganj, Ratlam-662702",
+    "aadhaar": "8019 7543 6930",
+    "pan": "CGHDA8951U",
+    "status": "active"
+  },
+  {
+    "id": "cust_1023",
+    "name": "Nimrat Dubey",
+    "email": "singhalka@example.com",
+    "phone": "6158657809",
+    "address": "43/161, Sawhney Zila, Dewas 050455",
+    "aadhaar": "3266 9348 9085",
+    "pan": "AKRYL6238K",
+    "status": "active"
+  },
+  {
+    "id": "cust_1024",
+    "name": "Farhan Raja",
+    "email": "widishadhar@example.org",
+    "phone": "04740748217",
+    "address": "64/743, Subramanian Marg, Patiala 959440",
+    "aadhaar": "1771 2796 3504",
+    "pan": "RXVDM6409V",
+    "status": "active"
+  },
+  {
+    "id": "cust_1025",
+    "name": "Bhavini Karpe",
+    "email": "theodore39@example.com",
+    "phone": "2104709521",
+    "address": "62/328, Wali Path, Dehradun 745171",
+    "aadhaar": "7916 2040 7304",
+    "pan": "XFYZA2368Q",
+    "status": "inactive"
+  },
+  {
+    "id": "cust_1026",
+    "name": "Suhani Pillay",
+    "email": "lakshmi51@example.net",
+    "phone": "+917098593174",
+    "address": "004, D\u2019Alia Chowk, Noida-675869",
+    "aadhaar": "8668 9669 5119",
+    "pan": "NARCS2617X",
+    "status": "active"
+  },
+  {
+    "id": "cust_1027",
+    "name": "Sachi Saxena",
+    "email": "jananichaudhary@example.net",
+    "phone": "08506431713",
+    "address": "H.No. 32, Jha, Begusarai 933529",
+    "aadhaar": "2876 9797 5371",
+    "pan": "IQZLH0422Q",
+    "status": "inactive"
+  },
+  {
+    "id": "cust_1028",
+    "name": "Karan Aurora",
+    "email": "wazir95@example.org",
+    "phone": "+914026811775",
+    "address": "39/08, Shanker Road, Ghaziabad 661771",
+    "aadhaar": "2827 5808 8123",
+    "pan": "EIRNO1592L",
+    "status": "active"
+  },
+  {
+    "id": "cust_1029",
+    "name": "Lakshmi Wali",
+    "email": "sudiksha89@example.com",
+    "phone": "+911836736576",
+    "address": "H.No. 65, Prasad Road, Bhalswa Jahangir Pur-111615",
+    "aadhaar": "8433 1053 5315",
+    "pan": "JJVQH2809A",
+    "status": "active"
+  },
+  {
+    "id": "cust_1030",
+    "name": "Pallavi Behl",
+    "email": "devika51@example.net",
+    "phone": "3273158514",
+    "address": "99/80, Loke, Bokaro-455022",
+    "aadhaar": "9317 2743 5889",
+    "pan": "VOBFV9612H",
+    "status": "active"
+  },
+  {
+    "id": "cust_1031",
+    "name": "Krisha Saini",
+    "email": "kom@example.com",
+    "phone": "05991022901",
+    "address": "67/976, Kale Road, Hapur 149784",
+    "aadhaar": "3504 7126 3646",
+    "pan": "DANTN0369X",
+    "status": "active"
+  },
+  {
+    "id": "cust_1032",
+    "name": "Aadhya Mann",
+    "email": "jagdish07@example.net",
+    "phone": "02268388516",
+    "address": "H.No. 715, Sanghvi, Erode 160529",
+    "aadhaar": "6310 9005 1319",
+    "pan": "GPBLZ7516H",
+    "status": "active"
+  },
+  {
+    "id": "cust_1033",
+    "name": "Meghana Mukherjee",
+    "email": "timothy52@example.org",
+    "phone": "1883552312",
+    "address": "921, Tak Street, Phusro 995527",
+    "aadhaar": "6947 6038 4923",
+    "pan": "YRLDW1774G",
+    "status": "active"
+  },
+  {
+    "id": "cust_1034",
+    "name": "Dayita Shenoy",
+    "email": "dbarad@example.com",
+    "phone": "01199867980",
+    "address": "H.No. 97, Dora Circle, Hospet-518203",
+    "aadhaar": "4946 2290 2403",
+    "pan": "NKXXS7788Y",
+    "status": "inactive"
+  },
+  {
+    "id": "cust_1035",
+    "name": "Hamsini Ben",
+    "email": "dominic51@example.net",
+    "phone": "6449251925",
+    "address": "914, Puri Circle, Warangal 685054",
+    "aadhaar": "2133 9727 3060",
+    "pan": "MOIJE2357S",
+    "status": "active"
+  },
+  {
+    "id": "cust_1036",
+    "name": "Yashica Zacharia",
+    "email": "nayarkaran@example.net",
+    "phone": "02229270653",
+    "address": "73/834, Hari Chowk, Aurangabad-746886",
+    "aadhaar": "8787 3705 5342",
+    "pan": "QDPEX2392J",
+    "status": "inactive"
+  },
+  {
+    "id": "cust_1037",
+    "name": "Zaitra Dash",
+    "email": "fiyaz24@example.com",
+    "phone": "2613750606",
+    "address": "15, Bala Ganj, Navi Mumbai 220472",
+    "aadhaar": "4470 9835 4295",
+    "pan": "FBQNJ7790J",
+    "status": "inactive"
+  },
+  {
+    "id": "cust_1038",
+    "name": "Indrajit Mani",
+    "email": "charvidara@example.org",
+    "phone": "+916971179808",
+    "address": "H.No. 60, Pandit, Aurangabad-218518",
+    "aadhaar": "7537 7118 8177",
+    "pan": "BYECO8888Y",
+    "status": "inactive"
+  },
+  {
+    "id": "cust_1039",
+    "name": "Zehaan Babu",
+    "email": "ekansh53@example.net",
+    "phone": "1952058527",
+    "address": "170, Jaggi Road, Kollam-548687",
+    "aadhaar": "2982 5061 4681",
+    "pan": "WXDPV4034R",
+    "status": "active"
+  },
+  {
+    "id": "cust_1040",
+    "name": "Jhalak Sarkar",
+    "email": "ysarraf@example.com",
+    "phone": "+917758416169",
+    "address": "H.No. 11, Merchant Path, Amroha-275705",
+    "aadhaar": "6539 1344 4770",
+    "pan": "EQOZX9640G",
+    "status": "active"
+  },
+  {
+    "id": "cust_1041",
+    "name": "Azaan Dhar",
+    "email": "ibanerjee@example.org",
+    "phone": "+915569092755",
+    "address": "28/56, Mallick Path, Raipur-278681",
+    "aadhaar": "1117 2163 1964",
+    "pan": "NSSFM4473H",
+    "status": "active"
+  },
+  {
+    "id": "cust_1042",
+    "name": "Ethan Seth",
+    "email": "saichahal@example.net",
+    "phone": "05188442258",
+    "address": "237, Patel Nagar, Bhind-911467",
+    "aadhaar": "2104 1514 6413",
+    "pan": "EIUPE8669C",
+    "status": "active"
+  },
+  {
+    "id": "cust_1043",
+    "name": "Zansi Padmanabhan",
+    "email": "qabildayal@example.com",
+    "phone": "0182422535",
+    "address": "H.No. 38, Dass Road, Srikakulam 829922",
+    "aadhaar": "9423 4899 5562",
+    "pan": "CBFCP9959X",
+    "status": "inactive"
+  },
+  {
+    "id": "cust_1044",
+    "name": "Shivansh Saha",
+    "email": "tankbimala@example.net",
+    "phone": "07364710276",
+    "address": "592, Nagar Path, Silchar-588153",
+    "aadhaar": "4510 9834 3167",
+    "pan": "PJGDS7147Y",
+    "status": "inactive"
+  },
+  {
+    "id": "cust_1045",
+    "name": "Yuvraj Dutta",
+    "email": "dhriti32@example.com",
+    "phone": "7747016873",
+    "address": "H.No. 047, Singhal, Jorhat-162456",
+    "aadhaar": "4981 8749 7669",
+    "pan": "KJMXJ5060S",
+    "status": "active"
+  },
+  {
+    "id": "cust_1046",
+    "name": "Libni Thaman",
+    "email": "nmammen@example.net",
+    "phone": "1216558523",
+    "address": "H.No. 025, Venkataraman Chowk, Jalgaon-595269",
+    "aadhaar": "2545 2588 8062",
+    "pan": "GIFTK4958T",
+    "status": "inactive"
+  },
+  {
+    "id": "cust_1047",
+    "name": "Anay Pillay",
+    "email": "imaran69@example.com",
+    "phone": "0974993097",
+    "address": "309, Halder Zila, Gandhidham-626368",
+    "aadhaar": "7939 7735 8651",
+    "pan": "HNJUQ9702E",
+    "status": "active"
+  },
+  {
+    "id": "cust_1048",
+    "name": "Dipta Ghose",
+    "email": "vwalia@example.net",
+    "phone": "04973348434",
+    "address": "75/758, Mani Road, Chapra 652404",
+    "aadhaar": "2612 1993 7596",
+    "pan": "VENMI1574R",
+    "status": "inactive"
+  },
+  {
+    "id": "cust_1049",
+    "name": "Laksh Chopra",
+    "email": "xavierbedi@example.net",
+    "phone": "3301657120",
+    "address": "77/345, Bhargava Road, Chapra-802620",
+    "aadhaar": "2790 5073 4139",
+    "pan": "CATKM6724G",
+    "status": "active"
+  }
+]

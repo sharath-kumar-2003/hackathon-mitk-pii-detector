@@ -1,0 +1,2190 @@
+[
+  {
+    "id": "TC-001",
+    "category": "EMAIL_ADDRESS",
+    "tool_name": "send_email",
+    "user_prompt": "Send email to user_100@example.com regarding account update for Tara Kurian.",
+    "arguments": {
+      "to": "user_100@example.com",
+      "subject": "Account Update",
+      "body": "Dear Tara Kurian, please update your security settings at user_100@example.com."
+    },
+    "expected_pii": [
+      {
+        "type": "EMAIL_ADDRESS",
+        "value": "user_100@example.com"
+      },
+      {
+        "type": "PERSON",
+        "value": "Tara Kurian"
+      }
+    ],
+    "protected_values": [
+      "user_100@example.com",
+      "Tara Kurian"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-002",
+    "category": "EMAIL_ADDRESS",
+    "tool_name": "send_email",
+    "user_prompt": "Send email to user_101@example.com regarding account update for Akshay Nazareth.",
+    "arguments": {
+      "to": "user_101@example.com",
+      "subject": "Account Update",
+      "body": "Dear Akshay Nazareth, please update your security settings at user_101@example.com."
+    },
+    "expected_pii": [
+      {
+        "type": "EMAIL_ADDRESS",
+        "value": "user_101@example.com"
+      },
+      {
+        "type": "PERSON",
+        "value": "Akshay Nazareth"
+      }
+    ],
+    "protected_values": [
+      "user_101@example.com",
+      "Akshay Nazareth"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-003",
+    "category": "EMAIL_ADDRESS",
+    "tool_name": "send_email",
+    "user_prompt": "Send email to user_102@example.com regarding account update for Reyansh Gill.",
+    "arguments": {
+      "to": "user_102@example.com",
+      "subject": "Account Update",
+      "body": "Dear Reyansh Gill, please update your security settings at user_102@example.com."
+    },
+    "expected_pii": [
+      {
+        "type": "EMAIL_ADDRESS",
+        "value": "user_102@example.com"
+      },
+      {
+        "type": "PERSON",
+        "value": "Reyansh Gill"
+      }
+    ],
+    "protected_values": [
+      "user_102@example.com",
+      "Reyansh Gill"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-004",
+    "category": "EMAIL_ADDRESS",
+    "tool_name": "send_email",
+    "user_prompt": "Send email to user_103@example.com regarding account update for Prisha Varma.",
+    "arguments": {
+      "to": "user_103@example.com",
+      "subject": "Account Update",
+      "body": "Dear Prisha Varma, please update your security settings at user_103@example.com."
+    },
+    "expected_pii": [
+      {
+        "type": "EMAIL_ADDRESS",
+        "value": "user_103@example.com"
+      },
+      {
+        "type": "PERSON",
+        "value": "Prisha Varma"
+      }
+    ],
+    "protected_values": [
+      "user_103@example.com",
+      "Prisha Varma"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-005",
+    "category": "EMAIL_ADDRESS",
+    "tool_name": "send_email",
+    "user_prompt": "Send email to user_104@example.com regarding account update for Gabriel Rattan.",
+    "arguments": {
+      "to": "user_104@example.com",
+      "subject": "Account Update",
+      "body": "Dear Gabriel Rattan, please update your security settings at user_104@example.com."
+    },
+    "expected_pii": [
+      {
+        "type": "EMAIL_ADDRESS",
+        "value": "user_104@example.com"
+      },
+      {
+        "type": "PERSON",
+        "value": "Gabriel Rattan"
+      }
+    ],
+    "protected_values": [
+      "user_104@example.com",
+      "Gabriel Rattan"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-006",
+    "category": "EMAIL_ADDRESS",
+    "tool_name": "send_email",
+    "user_prompt": "Send email to user_105@example.com regarding account update for Qasim Dey.",
+    "arguments": {
+      "to": "user_105@example.com",
+      "subject": "Account Update",
+      "body": "Dear Qasim Dey, please update your security settings at user_105@example.com."
+    },
+    "expected_pii": [
+      {
+        "type": "EMAIL_ADDRESS",
+        "value": "user_105@example.com"
+      },
+      {
+        "type": "PERSON",
+        "value": "Qasim Dey"
+      }
+    ],
+    "protected_values": [
+      "user_105@example.com",
+      "Qasim Dey"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-007",
+    "category": "EMAIL_ADDRESS",
+    "tool_name": "send_email",
+    "user_prompt": "Send email to user_106@example.com regarding account update for Ekiya Kothari.",
+    "arguments": {
+      "to": "user_106@example.com",
+      "subject": "Account Update",
+      "body": "Dear Ekiya Kothari, please update your security settings at user_106@example.com."
+    },
+    "expected_pii": [
+      {
+        "type": "EMAIL_ADDRESS",
+        "value": "user_106@example.com"
+      },
+      {
+        "type": "PERSON",
+        "value": "Ekiya Kothari"
+      }
+    ],
+    "protected_values": [
+      "user_106@example.com",
+      "Ekiya Kothari"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-008",
+    "category": "EMAIL_ADDRESS",
+    "tool_name": "send_email",
+    "user_prompt": "Send email to user_107@example.com regarding account update for Advika Rajagopal.",
+    "arguments": {
+      "to": "user_107@example.com",
+      "subject": "Account Update",
+      "body": "Dear Advika Rajagopal, please update your security settings at user_107@example.com."
+    },
+    "expected_pii": [
+      {
+        "type": "EMAIL_ADDRESS",
+        "value": "user_107@example.com"
+      },
+      {
+        "type": "PERSON",
+        "value": "Advika Rajagopal"
+      }
+    ],
+    "protected_values": [
+      "user_107@example.com",
+      "Advika Rajagopal"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-009",
+    "category": "EMAIL_ADDRESS",
+    "tool_name": "send_email",
+    "user_prompt": "Send email to user_108@example.com regarding account update for Sanya Loke.",
+    "arguments": {
+      "to": "user_108@example.com",
+      "subject": "Account Update",
+      "body": "Dear Sanya Loke, please update your security settings at user_108@example.com."
+    },
+    "expected_pii": [
+      {
+        "type": "EMAIL_ADDRESS",
+        "value": "user_108@example.com"
+      },
+      {
+        "type": "PERSON",
+        "value": "Sanya Loke"
+      }
+    ],
+    "protected_values": [
+      "user_108@example.com",
+      "Sanya Loke"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-010",
+    "category": "EMAIL_ADDRESS",
+    "tool_name": "send_email",
+    "user_prompt": "Send email to user_109@example.com regarding account update for Chasmum Apte.",
+    "arguments": {
+      "to": "user_109@example.com",
+      "subject": "Account Update",
+      "body": "Dear Chasmum Apte, please update your security settings at user_109@example.com."
+    },
+    "expected_pii": [
+      {
+        "type": "EMAIL_ADDRESS",
+        "value": "user_109@example.com"
+      },
+      {
+        "type": "PERSON",
+        "value": "Chasmum Apte"
+      }
+    ],
+    "protected_values": [
+      "user_109@example.com",
+      "Chasmum Apte"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-011",
+    "category": "EMAIL_ADDRESS",
+    "tool_name": "send_email",
+    "user_prompt": "Send email to user_110@example.com regarding account update for Jagvi Keer.",
+    "arguments": {
+      "to": "user_110@example.com",
+      "subject": "Account Update",
+      "body": "Dear Jagvi Keer, please update your security settings at user_110@example.com."
+    },
+    "expected_pii": [
+      {
+        "type": "EMAIL_ADDRESS",
+        "value": "user_110@example.com"
+      },
+      {
+        "type": "PERSON",
+        "value": "Jagvi Keer"
+      }
+    ],
+    "protected_values": [
+      "user_110@example.com",
+      "Jagvi Keer"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-012",
+    "category": "EMAIL_ADDRESS",
+    "tool_name": "send_email",
+    "user_prompt": "Send email to user_111@example.com regarding account update for Jagat Shroff.",
+    "arguments": {
+      "to": "user_111@example.com",
+      "subject": "Account Update",
+      "body": "Dear Jagat Shroff, please update your security settings at user_111@example.com."
+    },
+    "expected_pii": [
+      {
+        "type": "EMAIL_ADDRESS",
+        "value": "user_111@example.com"
+      },
+      {
+        "type": "PERSON",
+        "value": "Jagat Shroff"
+      }
+    ],
+    "protected_values": [
+      "user_111@example.com",
+      "Jagat Shroff"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-013",
+    "category": "EMAIL_ADDRESS",
+    "tool_name": "send_email",
+    "user_prompt": "Send email to user_112@example.com regarding account update for Nathaniel Ravi.",
+    "arguments": {
+      "to": "user_112@example.com",
+      "subject": "Account Update",
+      "body": "Dear Nathaniel Ravi, please update your security settings at user_112@example.com."
+    },
+    "expected_pii": [
+      {
+        "type": "EMAIL_ADDRESS",
+        "value": "user_112@example.com"
+      },
+      {
+        "type": "PERSON",
+        "value": "Nathaniel Ravi"
+      }
+    ],
+    "protected_values": [
+      "user_112@example.com",
+      "Nathaniel Ravi"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-014",
+    "category": "EMAIL_ADDRESS",
+    "tool_name": "send_email",
+    "user_prompt": "Send email to user_113@example.com regarding account update for Jacob Merchant.",
+    "arguments": {
+      "to": "user_113@example.com",
+      "subject": "Account Update",
+      "body": "Dear Jacob Merchant, please update your security settings at user_113@example.com."
+    },
+    "expected_pii": [
+      {
+        "type": "EMAIL_ADDRESS",
+        "value": "user_113@example.com"
+      },
+      {
+        "type": "PERSON",
+        "value": "Jacob Merchant"
+      }
+    ],
+    "protected_values": [
+      "user_113@example.com",
+      "Jacob Merchant"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-015",
+    "category": "EMAIL_ADDRESS",
+    "tool_name": "send_email",
+    "user_prompt": "Send email to user_114@example.com regarding account update for Timothy Kanda.",
+    "arguments": {
+      "to": "user_114@example.com",
+      "subject": "Account Update",
+      "body": "Dear Timothy Kanda, please update your security settings at user_114@example.com."
+    },
+    "expected_pii": [
+      {
+        "type": "EMAIL_ADDRESS",
+        "value": "user_114@example.com"
+      },
+      {
+        "type": "PERSON",
+        "value": "Timothy Kanda"
+      }
+    ],
+    "protected_values": [
+      "user_114@example.com",
+      "Timothy Kanda"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-016",
+    "category": "PHONE_NUMBER",
+    "tool_name": "web_search",
+    "user_prompt": "Search contact information for helpline 9876543210",
+    "arguments": {
+      "query": "Find status for customer helpline number 9876543210"
+    },
+    "expected_pii": [
+      {
+        "type": "PHONE_NUMBER",
+        "value": "9876543210"
+      }
+    ],
+    "protected_values": [
+      "9876543210"
+    ],
+    "expected_action": "redact",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-017",
+    "category": "PHONE_NUMBER",
+    "tool_name": "web_search",
+    "user_prompt": "Search contact information for helpline +91 9123456789",
+    "arguments": {
+      "query": "Find status for customer helpline number +91 9123456789"
+    },
+    "expected_pii": [
+      {
+        "type": "PHONE_NUMBER",
+        "value": "+91 9123456789"
+      }
+    ],
+    "protected_values": [
+      "+91 9123456789"
+    ],
+    "expected_action": "redact",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-018",
+    "category": "PHONE_NUMBER",
+    "tool_name": "web_search",
+    "user_prompt": "Search contact information for helpline 9000000001",
+    "arguments": {
+      "query": "Find status for customer helpline number 9000000001"
+    },
+    "expected_pii": [
+      {
+        "type": "PHONE_NUMBER",
+        "value": "9000000001"
+      }
+    ],
+    "protected_values": [
+      "9000000001"
+    ],
+    "expected_action": "redact",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-019",
+    "category": "PHONE_NUMBER",
+    "tool_name": "web_search",
+    "user_prompt": "Search contact information for helpline 8888877777",
+    "arguments": {
+      "query": "Find status for customer helpline number 8888877777"
+    },
+    "expected_pii": [
+      {
+        "type": "PHONE_NUMBER",
+        "value": "8888877777"
+      }
+    ],
+    "protected_values": [
+      "8888877777"
+    ],
+    "expected_action": "redact",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-020",
+    "category": "PHONE_NUMBER",
+    "tool_name": "web_search",
+    "user_prompt": "Search contact information for helpline +91-9988776655",
+    "arguments": {
+      "query": "Find status for customer helpline number +91-9988776655"
+    },
+    "expected_pii": [
+      {
+        "type": "PHONE_NUMBER",
+        "value": "+91-9988776655"
+      }
+    ],
+    "protected_values": [
+      "+91-9988776655"
+    ],
+    "expected_action": "redact",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-021",
+    "category": "PHONE_NUMBER",
+    "tool_name": "web_search",
+    "user_prompt": "Search contact information for helpline 98765 43210",
+    "arguments": {
+      "query": "Find status for customer helpline number 98765 43210"
+    },
+    "expected_pii": [
+      {
+        "type": "PHONE_NUMBER",
+        "value": "98765 43210"
+      }
+    ],
+    "protected_values": [
+      "98765 43210"
+    ],
+    "expected_action": "redact",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-022",
+    "category": "PHONE_NUMBER",
+    "tool_name": "web_search",
+    "user_prompt": "Search contact information for helpline 7012345678",
+    "arguments": {
+      "query": "Find status for customer helpline number 7012345678"
+    },
+    "expected_pii": [
+      {
+        "type": "PHONE_NUMBER",
+        "value": "7012345678"
+      }
+    ],
+    "protected_values": [
+      "7012345678"
+    ],
+    "expected_action": "redact",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-023",
+    "category": "PHONE_NUMBER",
+    "tool_name": "web_search",
+    "user_prompt": "Search contact information for helpline +91 8000011122",
+    "arguments": {
+      "query": "Find status for customer helpline number +91 8000011122"
+    },
+    "expected_pii": [
+      {
+        "type": "PHONE_NUMBER",
+        "value": "+91 8000011122"
+      }
+    ],
+    "protected_values": [
+      "+91 8000011122"
+    ],
+    "expected_action": "redact",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-024",
+    "category": "PHONE_NUMBER",
+    "tool_name": "web_search",
+    "user_prompt": "Search contact information for helpline 9444455555",
+    "arguments": {
+      "query": "Find status for customer helpline number 9444455555"
+    },
+    "expected_pii": [
+      {
+        "type": "PHONE_NUMBER",
+        "value": "9444455555"
+      }
+    ],
+    "protected_values": [
+      "9444455555"
+    ],
+    "expected_action": "redact",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-025",
+    "category": "PHONE_NUMBER",
+    "tool_name": "web_search",
+    "user_prompt": "Search contact information for helpline 9333322222",
+    "arguments": {
+      "query": "Find status for customer helpline number 9333322222"
+    },
+    "expected_pii": [
+      {
+        "type": "PHONE_NUMBER",
+        "value": "9333322222"
+      }
+    ],
+    "protected_values": [
+      "9333322222"
+    ],
+    "expected_action": "redact",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-026",
+    "category": "PHONE_NUMBER",
+    "tool_name": "web_search",
+    "user_prompt": "Search contact information for helpline 8111122223",
+    "arguments": {
+      "query": "Find status for customer helpline number 8111122223"
+    },
+    "expected_pii": [
+      {
+        "type": "PHONE_NUMBER",
+        "value": "8111122223"
+      }
+    ],
+    "protected_values": [
+      "8111122223"
+    ],
+    "expected_action": "redact",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-027",
+    "category": "PHONE_NUMBER",
+    "tool_name": "web_search",
+    "user_prompt": "Search contact information for helpline +91 7890123456",
+    "arguments": {
+      "query": "Find status for customer helpline number +91 7890123456"
+    },
+    "expected_pii": [
+      {
+        "type": "PHONE_NUMBER",
+        "value": "+91 7890123456"
+      }
+    ],
+    "protected_values": [
+      "+91 7890123456"
+    ],
+    "expected_action": "redact",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-028",
+    "category": "PHONE_NUMBER",
+    "tool_name": "web_search",
+    "user_prompt": "Search contact information for helpline 9555566667",
+    "arguments": {
+      "query": "Find status for customer helpline number 9555566667"
+    },
+    "expected_pii": [
+      {
+        "type": "PHONE_NUMBER",
+        "value": "9555566667"
+      }
+    ],
+    "protected_values": [
+      "9555566667"
+    ],
+    "expected_action": "redact",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-029",
+    "category": "PHONE_NUMBER",
+    "tool_name": "web_search",
+    "user_prompt": "Search contact information for helpline 9666677778",
+    "arguments": {
+      "query": "Find status for customer helpline number 9666677778"
+    },
+    "expected_pii": [
+      {
+        "type": "PHONE_NUMBER",
+        "value": "9666677778"
+      }
+    ],
+    "protected_values": [
+      "9666677778"
+    ],
+    "expected_action": "redact",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-030",
+    "category": "PHONE_NUMBER",
+    "tool_name": "web_search",
+    "user_prompt": "Search contact information for helpline 9777788889",
+    "arguments": {
+      "query": "Find status for customer helpline number 9777788889"
+    },
+    "expected_pii": [
+      {
+        "type": "PHONE_NUMBER",
+        "value": "9777788889"
+      }
+    ],
+    "protected_values": [
+      "9777788889"
+    ],
+    "expected_action": "redact",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-031",
+    "category": "IN_AADHAAR",
+    "tool_name": "internal_audit_tool",
+    "user_prompt": "Audit verification record with Aadhaar number 9786 8350 3296",
+    "arguments": {
+      "report_name": "Identity Verification",
+      "user_reference": "REF-8821",
+      "notes": "Verified applicant using Aadhaar 9786 8350 3296 successfully."
+    },
+    "expected_pii": [
+      {
+        "type": "IN_AADHAAR",
+        "value": "9786 8350 3296"
+      }
+    ],
+    "protected_values": [
+      "9786 8350 3296"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-032",
+    "category": "IN_AADHAAR",
+    "tool_name": "internal_audit_tool",
+    "user_prompt": "Audit verification record with Aadhaar number 7912 4006 5563",
+    "arguments": {
+      "report_name": "Identity Verification",
+      "user_reference": "REF-8821",
+      "notes": "Verified applicant using Aadhaar 7912 4006 5563 successfully."
+    },
+    "expected_pii": [
+      {
+        "type": "IN_AADHAAR",
+        "value": "7912 4006 5563"
+      }
+    ],
+    "protected_values": [
+      "7912 4006 5563"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-033",
+    "category": "IN_AADHAAR",
+    "tool_name": "internal_audit_tool",
+    "user_prompt": "Audit verification record with Aadhaar number 8579 5092 2235",
+    "arguments": {
+      "report_name": "Identity Verification",
+      "user_reference": "REF-8821",
+      "notes": "Verified applicant using Aadhaar 8579 5092 2235 successfully."
+    },
+    "expected_pii": [
+      {
+        "type": "IN_AADHAAR",
+        "value": "8579 5092 2235"
+      }
+    ],
+    "protected_values": [
+      "8579 5092 2235"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-034",
+    "category": "IN_AADHAAR",
+    "tool_name": "internal_audit_tool",
+    "user_prompt": "Audit verification record with Aadhaar number 8260 2604 1828",
+    "arguments": {
+      "report_name": "Identity Verification",
+      "user_reference": "REF-8821",
+      "notes": "Verified applicant using Aadhaar 8260 2604 1828 successfully."
+    },
+    "expected_pii": [
+      {
+        "type": "IN_AADHAAR",
+        "value": "8260 2604 1828"
+      }
+    ],
+    "protected_values": [
+      "8260 2604 1828"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-035",
+    "category": "IN_AADHAAR",
+    "tool_name": "internal_audit_tool",
+    "user_prompt": "Audit verification record with Aadhaar number 9856 1241 2528",
+    "arguments": {
+      "report_name": "Identity Verification",
+      "user_reference": "REF-8821",
+      "notes": "Verified applicant using Aadhaar 9856 1241 2528 successfully."
+    },
+    "expected_pii": [
+      {
+        "type": "IN_AADHAAR",
+        "value": "9856 1241 2528"
+      }
+    ],
+    "protected_values": [
+      "9856 1241 2528"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-036",
+    "category": "IN_AADHAAR",
+    "tool_name": "internal_audit_tool",
+    "user_prompt": "Audit verification record with Aadhaar number 4872 3724 7658",
+    "arguments": {
+      "report_name": "Identity Verification",
+      "user_reference": "REF-8821",
+      "notes": "Verified applicant using Aadhaar 4872 3724 7658 successfully."
+    },
+    "expected_pii": [
+      {
+        "type": "IN_AADHAAR",
+        "value": "4872 3724 7658"
+      }
+    ],
+    "protected_values": [
+      "4872 3724 7658"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-037",
+    "category": "IN_AADHAAR",
+    "tool_name": "internal_audit_tool",
+    "user_prompt": "Audit verification record with Aadhaar number 8956 8886 4502",
+    "arguments": {
+      "report_name": "Identity Verification",
+      "user_reference": "REF-8821",
+      "notes": "Verified applicant using Aadhaar 8956 8886 4502 successfully."
+    },
+    "expected_pii": [
+      {
+        "type": "IN_AADHAAR",
+        "value": "8956 8886 4502"
+      }
+    ],
+    "protected_values": [
+      "8956 8886 4502"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-038",
+    "category": "IN_AADHAAR",
+    "tool_name": "internal_audit_tool",
+    "user_prompt": "Audit verification record with Aadhaar number 7570 1960 3697",
+    "arguments": {
+      "report_name": "Identity Verification",
+      "user_reference": "REF-8821",
+      "notes": "Verified applicant using Aadhaar 7570 1960 3697 successfully."
+    },
+    "expected_pii": [
+      {
+        "type": "IN_AADHAAR",
+        "value": "7570 1960 3697"
+      }
+    ],
+    "protected_values": [
+      "7570 1960 3697"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-039",
+    "category": "IN_PAN",
+    "tool_name": "internal_audit_tool",
+    "user_prompt": "Audit tax document with PAN VMXAS2727J",
+    "arguments": {
+      "report_name": "Tax Compliance",
+      "user_reference": "REF-9932",
+      "notes": "Tax clearance provided for PAN card holder VMXAS2727J."
+    },
+    "expected_pii": [
+      {
+        "type": "IN_PAN",
+        "value": "VMXAS2727J"
+      }
+    ],
+    "protected_values": [
+      "VMXAS2727J"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-040",
+    "category": "IN_PAN",
+    "tool_name": "internal_audit_tool",
+    "user_prompt": "Audit tax document with PAN RWMYF7833H",
+    "arguments": {
+      "report_name": "Tax Compliance",
+      "user_reference": "REF-9932",
+      "notes": "Tax clearance provided for PAN card holder RWMYF7833H."
+    },
+    "expected_pii": [
+      {
+        "type": "IN_PAN",
+        "value": "RWMYF7833H"
+      }
+    ],
+    "protected_values": [
+      "RWMYF7833H"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-041",
+    "category": "IN_PAN",
+    "tool_name": "internal_audit_tool",
+    "user_prompt": "Audit tax document with PAN KHDJG7851M",
+    "arguments": {
+      "report_name": "Tax Compliance",
+      "user_reference": "REF-9932",
+      "notes": "Tax clearance provided for PAN card holder KHDJG7851M."
+    },
+    "expected_pii": [
+      {
+        "type": "IN_PAN",
+        "value": "KHDJG7851M"
+      }
+    ],
+    "protected_values": [
+      "KHDJG7851M"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-042",
+    "category": "IN_PAN",
+    "tool_name": "internal_audit_tool",
+    "user_prompt": "Audit tax document with PAN UHCHR9822N",
+    "arguments": {
+      "report_name": "Tax Compliance",
+      "user_reference": "REF-9932",
+      "notes": "Tax clearance provided for PAN card holder UHCHR9822N."
+    },
+    "expected_pii": [
+      {
+        "type": "IN_PAN",
+        "value": "UHCHR9822N"
+      }
+    ],
+    "protected_values": [
+      "UHCHR9822N"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-043",
+    "category": "IN_PAN",
+    "tool_name": "internal_audit_tool",
+    "user_prompt": "Audit tax document with PAN CZDDI9718G",
+    "arguments": {
+      "report_name": "Tax Compliance",
+      "user_reference": "REF-9932",
+      "notes": "Tax clearance provided for PAN card holder CZDDI9718G."
+    },
+    "expected_pii": [
+      {
+        "type": "IN_PAN",
+        "value": "CZDDI9718G"
+      }
+    ],
+    "protected_values": [
+      "CZDDI9718G"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-044",
+    "category": "IN_PAN",
+    "tool_name": "internal_audit_tool",
+    "user_prompt": "Audit tax document with PAN JDRZT6790U",
+    "arguments": {
+      "report_name": "Tax Compliance",
+      "user_reference": "REF-9932",
+      "notes": "Tax clearance provided for PAN card holder JDRZT6790U."
+    },
+    "expected_pii": [
+      {
+        "type": "IN_PAN",
+        "value": "JDRZT6790U"
+      }
+    ],
+    "protected_values": [
+      "JDRZT6790U"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-045",
+    "category": "IN_PAN",
+    "tool_name": "internal_audit_tool",
+    "user_prompt": "Audit tax document with PAN VNLEC0640B",
+    "arguments": {
+      "report_name": "Tax Compliance",
+      "user_reference": "REF-9932",
+      "notes": "Tax clearance provided for PAN card holder VNLEC0640B."
+    },
+    "expected_pii": [
+      {
+        "type": "IN_PAN",
+        "value": "VNLEC0640B"
+      }
+    ],
+    "protected_values": [
+      "VNLEC0640B"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-046",
+    "category": "SYNTHETIC_ID",
+    "tool_name": "internal_audit_tool",
+    "user_prompt": "Audit test fixture identifier SYNTH-ID-1000",
+    "arguments": {
+      "report_name": "Fixture Check",
+      "user_reference": "SYNTH-ID-1000",
+      "notes": "Processing synthetic test fixture SYNTH-ID-1000 for system benchmark."
+    },
+    "expected_pii": [
+      {
+        "type": "SYNTHETIC_ID",
+        "value": "SYNTH-ID-1000"
+      }
+    ],
+    "protected_values": [
+      "SYNTH-ID-1000"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-047",
+    "category": "SYNTHETIC_ID",
+    "tool_name": "internal_audit_tool",
+    "user_prompt": "Audit test fixture identifier SYNTH-ID-1001",
+    "arguments": {
+      "report_name": "Fixture Check",
+      "user_reference": "SYNTH-ID-1001",
+      "notes": "Processing synthetic test fixture SYNTH-ID-1001 for system benchmark."
+    },
+    "expected_pii": [
+      {
+        "type": "SYNTHETIC_ID",
+        "value": "SYNTH-ID-1001"
+      }
+    ],
+    "protected_values": [
+      "SYNTH-ID-1001"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-048",
+    "category": "SYNTHETIC_ID",
+    "tool_name": "internal_audit_tool",
+    "user_prompt": "Audit test fixture identifier SYNTH-ID-1002",
+    "arguments": {
+      "report_name": "Fixture Check",
+      "user_reference": "SYNTH-ID-1002",
+      "notes": "Processing synthetic test fixture SYNTH-ID-1002 for system benchmark."
+    },
+    "expected_pii": [
+      {
+        "type": "SYNTHETIC_ID",
+        "value": "SYNTH-ID-1002"
+      }
+    ],
+    "protected_values": [
+      "SYNTH-ID-1002"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-049",
+    "category": "SYNTHETIC_ID",
+    "tool_name": "internal_audit_tool",
+    "user_prompt": "Audit test fixture identifier SYNTH-ID-1003",
+    "arguments": {
+      "report_name": "Fixture Check",
+      "user_reference": "SYNTH-ID-1003",
+      "notes": "Processing synthetic test fixture SYNTH-ID-1003 for system benchmark."
+    },
+    "expected_pii": [
+      {
+        "type": "SYNTHETIC_ID",
+        "value": "SYNTH-ID-1003"
+      }
+    ],
+    "protected_values": [
+      "SYNTH-ID-1003"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-050",
+    "category": "SYNTHETIC_ID",
+    "tool_name": "internal_audit_tool",
+    "user_prompt": "Audit test fixture identifier SYNTH-ID-1004",
+    "arguments": {
+      "report_name": "Fixture Check",
+      "user_reference": "SYNTH-ID-1004",
+      "notes": "Processing synthetic test fixture SYNTH-ID-1004 for system benchmark."
+    },
+    "expected_pii": [
+      {
+        "type": "SYNTHETIC_ID",
+        "value": "SYNTH-ID-1004"
+      }
+    ],
+    "protected_values": [
+      "SYNTH-ID-1004"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-051",
+    "category": "SYNTHETIC_ID",
+    "tool_name": "internal_audit_tool",
+    "user_prompt": "Audit test fixture identifier SYNTH-ID-1005",
+    "arguments": {
+      "report_name": "Fixture Check",
+      "user_reference": "SYNTH-ID-1005",
+      "notes": "Processing synthetic test fixture SYNTH-ID-1005 for system benchmark."
+    },
+    "expected_pii": [
+      {
+        "type": "SYNTHETIC_ID",
+        "value": "SYNTH-ID-1005"
+      }
+    ],
+    "protected_values": [
+      "SYNTH-ID-1005"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-052",
+    "category": "SYNTHETIC_ID",
+    "tool_name": "internal_audit_tool",
+    "user_prompt": "Audit test fixture identifier SYNTH-ID-1006",
+    "arguments": {
+      "report_name": "Fixture Check",
+      "user_reference": "SYNTH-ID-1006",
+      "notes": "Processing synthetic test fixture SYNTH-ID-1006 for system benchmark."
+    },
+    "expected_pii": [
+      {
+        "type": "SYNTHETIC_ID",
+        "value": "SYNTH-ID-1006"
+      }
+    ],
+    "protected_values": [
+      "SYNTH-ID-1006"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-053",
+    "category": "SYNTHETIC_ID",
+    "tool_name": "internal_audit_tool",
+    "user_prompt": "Audit test fixture identifier SYNTH-ID-1007",
+    "arguments": {
+      "report_name": "Fixture Check",
+      "user_reference": "SYNTH-ID-1007",
+      "notes": "Processing synthetic test fixture SYNTH-ID-1007 for system benchmark."
+    },
+    "expected_pii": [
+      {
+        "type": "SYNTHETIC_ID",
+        "value": "SYNTH-ID-1007"
+      }
+    ],
+    "protected_values": [
+      "SYNTH-ID-1007"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-054",
+    "category": "PERSON",
+    "tool_name": "web_search",
+    "user_prompt": "Search articles about Devansh Bhasin",
+    "arguments": {
+      "query": "Biographical profile for Devansh Bhasin"
+    },
+    "expected_pii": [
+      {
+        "type": "PERSON",
+        "value": "Devansh Bhasin"
+      }
+    ],
+    "protected_values": [
+      "Devansh Bhasin"
+    ],
+    "expected_action": "redact",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-055",
+    "category": "PERSON",
+    "tool_name": "web_search",
+    "user_prompt": "Search articles about Urmi Balay",
+    "arguments": {
+      "query": "Biographical profile for Urmi Balay"
+    },
+    "expected_pii": [
+      {
+        "type": "PERSON",
+        "value": "Urmi Balay"
+      }
+    ],
+    "protected_values": [
+      "Urmi Balay"
+    ],
+    "expected_action": "redact",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-056",
+    "category": "PERSON",
+    "tool_name": "web_search",
+    "user_prompt": "Search articles about Nilima Gole",
+    "arguments": {
+      "query": "Biographical profile for Nilima Gole"
+    },
+    "expected_pii": [
+      {
+        "type": "PERSON",
+        "value": "Nilima Gole"
+      }
+    ],
+    "protected_values": [
+      "Nilima Gole"
+    ],
+    "expected_action": "redact",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-057",
+    "category": "PERSON",
+    "tool_name": "web_search",
+    "user_prompt": "Search articles about Osha Prasad",
+    "arguments": {
+      "query": "Biographical profile for Osha Prasad"
+    },
+    "expected_pii": [
+      {
+        "type": "PERSON",
+        "value": "Osha Prasad"
+      }
+    ],
+    "protected_values": [
+      "Osha Prasad"
+    ],
+    "expected_action": "redact",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-058",
+    "category": "PERSON",
+    "tool_name": "web_search",
+    "user_prompt": "Search articles about Saumya Purohit",
+    "arguments": {
+      "query": "Biographical profile for Saumya Purohit"
+    },
+    "expected_pii": [
+      {
+        "type": "PERSON",
+        "value": "Saumya Purohit"
+      }
+    ],
+    "protected_values": [
+      "Saumya Purohit"
+    ],
+    "expected_action": "redact",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-059",
+    "category": "PERSON",
+    "tool_name": "web_search",
+    "user_prompt": "Search articles about Faris Zacharia",
+    "arguments": {
+      "query": "Biographical profile for Faris Zacharia"
+    },
+    "expected_pii": [
+      {
+        "type": "PERSON",
+        "value": "Faris Zacharia"
+      }
+    ],
+    "protected_values": [
+      "Faris Zacharia"
+    ],
+    "expected_action": "redact",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-060",
+    "category": "PERSON",
+    "tool_name": "web_search",
+    "user_prompt": "Search articles about Ijaya Dani",
+    "arguments": {
+      "query": "Biographical profile for Ijaya Dani"
+    },
+    "expected_pii": [
+      {
+        "type": "PERSON",
+        "value": "Ijaya Dani"
+      }
+    ],
+    "protected_values": [
+      "Ijaya Dani"
+    ],
+    "expected_action": "redact",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-061",
+    "category": "CLEAN_NON_PII",
+    "tool_name": "web_search",
+    "user_prompt": "Query status of order ORD-987654",
+    "arguments": {
+      "query": "Status of order ORD-987654"
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "allow",
+    "expected_outcome": "allowed",
+    "has_pii": false
+  },
+  {
+    "id": "TC-062",
+    "category": "CLEAN_NON_PII",
+    "tool_name": "web_search",
+    "user_prompt": "Check product SKU-109283 in inventory",
+    "arguments": {
+      "query": "Inventory lookup for SKU-109283"
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "allow",
+    "expected_outcome": "allowed",
+    "has_pii": false
+  },
+  {
+    "id": "TC-063",
+    "category": "CLEAN_NON_PII",
+    "tool_name": "web_search",
+    "user_prompt": "System timestamp 2026-10-09T19:30:00Z execution",
+    "arguments": {
+      "query": "Log event at 2026-10-09T19:30:00Z"
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "allow",
+    "expected_outcome": "allowed",
+    "has_pii": false
+  },
+  {
+    "id": "TC-064",
+    "category": "CLEAN_NON_PII",
+    "tool_name": "web_search",
+    "user_prompt": "HTTP 200 OK status code response",
+    "arguments": {
+      "query": "Explain HTTP 200 OK status code"
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "allow",
+    "expected_outcome": "allowed",
+    "has_pii": false
+  },
+  {
+    "id": "TC-065",
+    "category": "CLEAN_NON_PII",
+    "tool_name": "web_search",
+    "user_prompt": "Python version 3.14.0 release notes",
+    "arguments": {
+      "query": "What is new in Python version 3.14.0?"
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "allow",
+    "expected_outcome": "allowed",
+    "has_pii": false
+  },
+  {
+    "id": "TC-066",
+    "category": "CLEAN_NON_PII",
+    "tool_name": "web_search",
+    "user_prompt": "Calculate 500 + 4500 total amount",
+    "arguments": {
+      "query": "Math calculation 500 + 4500"
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "allow",
+    "expected_outcome": "allowed",
+    "has_pii": false
+  },
+  {
+    "id": "TC-067",
+    "category": "CLEAN_NON_PII",
+    "tool_name": "web_search",
+    "user_prompt": "Hubballi weather forecast tomorrow",
+    "arguments": {
+      "query": "Weather forecast for Hubballi city tomorrow"
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "allow",
+    "expected_outcome": "allowed",
+    "has_pii": false
+  },
+  {
+    "id": "TC-068",
+    "category": "CLEAN_NON_PII",
+    "tool_name": "web_search",
+    "user_prompt": "Database query SELECT * FROM table",
+    "arguments": {
+      "query": "SQL syntax for SELECT * FROM table"
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "allow",
+    "expected_outcome": "allowed",
+    "has_pii": false
+  },
+  {
+    "id": "TC-069",
+    "category": "CLEAN_NON_PII",
+    "tool_name": "web_search",
+    "user_prompt": "Check server IP 127.0.0.1 loopback",
+    "arguments": {
+      "query": "Localhost loopback address 127.0.0.1"
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "allow",
+    "expected_outcome": "allowed",
+    "has_pii": false
+  },
+  {
+    "id": "TC-070",
+    "category": "CLEAN_NON_PII",
+    "tool_name": "customer_lookup",
+    "user_prompt": "Customer lookup by ID cust_1001",
+    "arguments": {
+      "customer_id": "cust_1001",
+      "fields": [
+        "status"
+      ]
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "allow",
+    "expected_outcome": "allowed",
+    "has_pii": false
+  },
+  {
+    "id": "TC-071",
+    "category": "CLEAN_NON_PII",
+    "tool_name": "customer_lookup",
+    "user_prompt": "Customer lookup by ID cust_1005",
+    "arguments": {
+      "customer_id": "cust_1005",
+      "fields": [
+        "name",
+        "email"
+      ]
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "allow",
+    "expected_outcome": "allowed",
+    "has_pii": false
+  },
+  {
+    "id": "TC-072",
+    "category": "CLEAN_NON_PII",
+    "tool_name": "customer_lookup",
+    "user_prompt": "Customer lookup by ID cust_1020",
+    "arguments": {
+      "customer_id": "cust_1020",
+      "fields": [
+        "status"
+      ]
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "allow",
+    "expected_outcome": "allowed",
+    "has_pii": false
+  },
+  {
+    "id": "TC-073",
+    "category": "CLEAN_NON_PII",
+    "tool_name": "web_search",
+    "user_prompt": "Search public documentation for API route",
+    "arguments": {
+      "query": "REST API documentation for /v1/health"
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "allow",
+    "expected_outcome": "allowed",
+    "has_pii": false
+  },
+  {
+    "id": "TC-074",
+    "category": "CLEAN_NON_PII",
+    "tool_name": "web_search",
+    "user_prompt": "Read open source license terms",
+    "arguments": {
+      "query": "MIT License full text text details"
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "allow",
+    "expected_outcome": "allowed",
+    "has_pii": false
+  },
+  {
+    "id": "TC-075",
+    "category": "CLEAN_NON_PII",
+    "tool_name": "web_search",
+    "user_prompt": "Check server CPU utilization 45%",
+    "arguments": {
+      "query": "Troubleshoot server CPU utilization 45 percent"
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "allow",
+    "expected_outcome": "allowed",
+    "has_pii": false
+  },
+  {
+    "id": "TC-076",
+    "category": "CLEAN_NON_PII",
+    "tool_name": "web_search",
+    "user_prompt": "Search recipe for vegetarian pasta",
+    "arguments": {
+      "query": "Vegetarian pasta recipe with garlic and olive oil"
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "allow",
+    "expected_outcome": "allowed",
+    "has_pii": false
+  },
+  {
+    "id": "TC-077",
+    "category": "CLEAN_NON_PII",
+    "tool_name": "web_search",
+    "user_prompt": "List files in directory /usr/bin",
+    "arguments": {
+      "query": "How to list files in /usr/bin directory"
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "allow",
+    "expected_outcome": "allowed",
+    "has_pii": false
+  },
+  {
+    "id": "TC-078",
+    "category": "CLEAN_NON_PII",
+    "tool_name": "web_search",
+    "user_prompt": "Check git commit hash a1b2c3d4e5",
+    "arguments": {
+      "query": "Git commit hash a1b2c3d4e5 diff"
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "allow",
+    "expected_outcome": "allowed",
+    "has_pii": false
+  },
+  {
+    "id": "TC-079",
+    "category": "CLEAN_NON_PII",
+    "tool_name": "web_search",
+    "user_prompt": "Check port 8000 availability",
+    "arguments": {
+      "query": "Check if port 8000 is open on localhost"
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "allow",
+    "expected_outcome": "allowed",
+    "has_pii": false
+  },
+  {
+    "id": "TC-080",
+    "category": "CLEAN_NON_PII",
+    "tool_name": "customer_lookup",
+    "user_prompt": "Customer lookup by ID cust_1049",
+    "arguments": {
+      "customer_id": "cust_1049",
+      "fields": [
+        "status"
+      ]
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "allow",
+    "expected_outcome": "allowed",
+    "has_pii": false
+  },
+  {
+    "id": "TC-081",
+    "category": "POLICY_VIOLATION",
+    "tool_name": "query_db",
+    "user_prompt": "Invoke non-existent tool query_db",
+    "arguments": {
+      "query": "SELECT * FROM users"
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "block",
+    "expected_outcome": "blocked",
+    "has_pii": false,
+    "violation_reason": "Unknown tool Policy failure (fail closed)"
+  },
+  {
+    "id": "TC-082",
+    "category": "POLICY_VIOLATION",
+    "tool_name": "execute_code",
+    "user_prompt": "Invoke unauthorized tool execute_code",
+    "arguments": {
+      "code": "import os; os.system('ls')"
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "block",
+    "expected_outcome": "blocked",
+    "has_pii": false,
+    "violation_reason": "Unknown tool Policy failure (fail closed)"
+  },
+  {
+    "id": "TC-083",
+    "category": "POLICY_VIOLATION",
+    "tool_name": "delete_user",
+    "user_prompt": "Invoke unknown tool delete_user",
+    "arguments": {
+      "user_id": "user_123"
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "block",
+    "expected_outcome": "blocked",
+    "has_pii": false,
+    "violation_reason": "Unknown tool Policy failure (fail closed)"
+  },
+  {
+    "id": "TC-084",
+    "category": "POLICY_VIOLATION",
+    "tool_name": "web_search",
+    "user_prompt": "Send unpermitted secret field to web_search",
+    "arguments": {
+      "query": "weather",
+      "unpermitted_api_key": "SECRET-123456"
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "block",
+    "expected_outcome": "blocked",
+    "has_pii": false,
+    "violation_reason": "Unpermitted field in web_search"
+  },
+  {
+    "id": "TC-085",
+    "category": "POLICY_VIOLATION",
+    "tool_name": "customer_lookup",
+    "user_prompt": "Send unpermitted password to customer_lookup",
+    "arguments": {
+      "customer_id": "cust_1001",
+      "password_hash": "hash_secret_99"
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "block",
+    "expected_outcome": "blocked",
+    "has_pii": false,
+    "violation_reason": "Unpermitted field in customer_lookup"
+  },
+  {
+    "id": "TC-086",
+    "category": "POLICY_VIOLATION",
+    "tool_name": "send_email",
+    "user_prompt": "Send unpermitted auth header to send_email",
+    "arguments": {
+      "to": "test@example.com",
+      "subject": "Hi",
+      "body": "Hello",
+      "auth_token": "Bearer 12345"
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "block",
+    "expected_outcome": "blocked",
+    "has_pii": false,
+    "violation_reason": "Unpermitted field in send_email"
+  },
+  {
+    "id": "TC-087",
+    "category": "POLICY_VIOLATION",
+    "tool_name": "admin_reset",
+    "user_prompt": "Invoke unknown tool admin_reset",
+    "arguments": {
+      "action": "reset_all"
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "block",
+    "expected_outcome": "blocked",
+    "has_pii": false,
+    "violation_reason": "Unknown tool Policy failure (fail closed)"
+  },
+  {
+    "id": "TC-088",
+    "category": "POLICY_VIOLATION",
+    "tool_name": "export_all_data",
+    "user_prompt": "Invoke unknown tool export_all_data",
+    "arguments": {
+      "format": "csv"
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "block",
+    "expected_outcome": "blocked",
+    "has_pii": false,
+    "violation_reason": "Unknown tool Policy failure (fail closed)"
+  },
+  {
+    "id": "TC-089",
+    "category": "POLICY_VIOLATION",
+    "tool_name": "web_search",
+    "user_prompt": "Send unpermitted field card_number to web_search",
+    "arguments": {
+      "query": "test",
+      "credit_card": "4111222233334444"
+    },
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "block",
+    "expected_outcome": "blocked",
+    "has_pii": false,
+    "violation_reason": "Unpermitted field in web_search"
+  },
+  {
+    "id": "TC-090",
+    "category": "POLICY_VIOLATION",
+    "tool_name": "web_search",
+    "user_prompt": "Send malformed arguments to web_search",
+    "arguments": "NOT_A_DICT_ARGUMENT",
+    "expected_pii": [],
+    "protected_values": [],
+    "expected_action": "block",
+    "expected_outcome": "blocked",
+    "has_pii": false,
+    "violation_reason": "Malformed tool argument structure"
+  },
+  {
+    "id": "TC-091",
+    "category": "MULTI_PII",
+    "tool_name": "send_email",
+    "user_prompt": "Email composite profile for Maya Wadhwa at contact_0@company.org phone 9111122200 address 10 Main St, Hubballi",
+    "arguments": {
+      "to": "contact_0@company.org",
+      "subject": "Composite Profile",
+      "body": "Name: Maya Wadhwa, Phone: 9111122200, Email: contact_0@company.org, Address: 10 Main St, Hubballi"
+    },
+    "expected_pii": [
+      {
+        "type": "EMAIL_ADDRESS",
+        "value": "contact_0@company.org"
+      },
+      {
+        "type": "PHONE_NUMBER",
+        "value": "9111122200"
+      },
+      {
+        "type": "PERSON",
+        "value": "Maya Wadhwa"
+      }
+    ],
+    "protected_values": [
+      "contact_0@company.org",
+      "9111122200",
+      "Maya Wadhwa"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-092",
+    "category": "MULTI_PII",
+    "tool_name": "send_email",
+    "user_prompt": "Email composite profile for Udant Aggarwal at contact_1@company.org phone 9111122201 address 11 Main St, Hubballi",
+    "arguments": {
+      "to": "contact_1@company.org",
+      "subject": "Composite Profile",
+      "body": "Name: Udant Aggarwal, Phone: 9111122201, Email: contact_1@company.org, Address: 11 Main St, Hubballi"
+    },
+    "expected_pii": [
+      {
+        "type": "EMAIL_ADDRESS",
+        "value": "contact_1@company.org"
+      },
+      {
+        "type": "PHONE_NUMBER",
+        "value": "9111122201"
+      },
+      {
+        "type": "PERSON",
+        "value": "Udant Aggarwal"
+      }
+    ],
+    "protected_values": [
+      "contact_1@company.org",
+      "9111122201",
+      "Udant Aggarwal"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-093",
+    "category": "MULTI_PII",
+    "tool_name": "send_email",
+    "user_prompt": "Email composite profile for Chanchal Sheth at contact_2@company.org phone 9111122202 address 12 Main St, Hubballi",
+    "arguments": {
+      "to": "contact_2@company.org",
+      "subject": "Composite Profile",
+      "body": "Name: Chanchal Sheth, Phone: 9111122202, Email: contact_2@company.org, Address: 12 Main St, Hubballi"
+    },
+    "expected_pii": [
+      {
+        "type": "EMAIL_ADDRESS",
+        "value": "contact_2@company.org"
+      },
+      {
+        "type": "PHONE_NUMBER",
+        "value": "9111122202"
+      },
+      {
+        "type": "PERSON",
+        "value": "Chanchal Sheth"
+      }
+    ],
+    "protected_values": [
+      "contact_2@company.org",
+      "9111122202",
+      "Chanchal Sheth"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-094",
+    "category": "MULTI_PII",
+    "tool_name": "send_email",
+    "user_prompt": "Email composite profile for Ladli Karpe at contact_3@company.org phone 9111122203 address 13 Main St, Hubballi",
+    "arguments": {
+      "to": "contact_3@company.org",
+      "subject": "Composite Profile",
+      "body": "Name: Ladli Karpe, Phone: 9111122203, Email: contact_3@company.org, Address: 13 Main St, Hubballi"
+    },
+    "expected_pii": [
+      {
+        "type": "EMAIL_ADDRESS",
+        "value": "contact_3@company.org"
+      },
+      {
+        "type": "PHONE_NUMBER",
+        "value": "9111122203"
+      },
+      {
+        "type": "PERSON",
+        "value": "Ladli Karpe"
+      }
+    ],
+    "protected_values": [
+      "contact_3@company.org",
+      "9111122203",
+      "Ladli Karpe"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-095",
+    "category": "MULTI_PII",
+    "tool_name": "send_email",
+    "user_prompt": "Email composite profile for Triveni Pal at contact_4@company.org phone 9111122204 address 14 Main St, Hubballi",
+    "arguments": {
+      "to": "contact_4@company.org",
+      "subject": "Composite Profile",
+      "body": "Name: Triveni Pal, Phone: 9111122204, Email: contact_4@company.org, Address: 14 Main St, Hubballi"
+    },
+    "expected_pii": [
+      {
+        "type": "EMAIL_ADDRESS",
+        "value": "contact_4@company.org"
+      },
+      {
+        "type": "PHONE_NUMBER",
+        "value": "9111122204"
+      },
+      {
+        "type": "PERSON",
+        "value": "Triveni Pal"
+      }
+    ],
+    "protected_values": [
+      "contact_4@company.org",
+      "9111122204",
+      "Triveni Pal"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-096",
+    "category": "MULTI_PII",
+    "tool_name": "send_email",
+    "user_prompt": "Email composite profile for Anya Gulati at contact_5@company.org phone 9111122205 address 15 Main St, Hubballi",
+    "arguments": {
+      "to": "contact_5@company.org",
+      "subject": "Composite Profile",
+      "body": "Name: Anya Gulati, Phone: 9111122205, Email: contact_5@company.org, Address: 15 Main St, Hubballi"
+    },
+    "expected_pii": [
+      {
+        "type": "EMAIL_ADDRESS",
+        "value": "contact_5@company.org"
+      },
+      {
+        "type": "PHONE_NUMBER",
+        "value": "9111122205"
+      },
+      {
+        "type": "PERSON",
+        "value": "Anya Gulati"
+      }
+    ],
+    "protected_values": [
+      "contact_5@company.org",
+      "9111122205",
+      "Anya Gulati"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-097",
+    "category": "MULTI_PII",
+    "tool_name": "send_email",
+    "user_prompt": "Email composite profile for Azad Saini at contact_6@company.org phone 9111122206 address 16 Main St, Hubballi",
+    "arguments": {
+      "to": "contact_6@company.org",
+      "subject": "Composite Profile",
+      "body": "Name: Azad Saini, Phone: 9111122206, Email: contact_6@company.org, Address: 16 Main St, Hubballi"
+    },
+    "expected_pii": [
+      {
+        "type": "EMAIL_ADDRESS",
+        "value": "contact_6@company.org"
+      },
+      {
+        "type": "PHONE_NUMBER",
+        "value": "9111122206"
+      },
+      {
+        "type": "PERSON",
+        "value": "Azad Saini"
+      }
+    ],
+    "protected_values": [
+      "contact_6@company.org",
+      "9111122206",
+      "Azad Saini"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-098",
+    "category": "MULTI_PII",
+    "tool_name": "send_email",
+    "user_prompt": "Email composite profile for Wridesh Jhaveri at contact_7@company.org phone 9111122207 address 17 Main St, Hubballi",
+    "arguments": {
+      "to": "contact_7@company.org",
+      "subject": "Composite Profile",
+      "body": "Name: Wridesh Jhaveri, Phone: 9111122207, Email: contact_7@company.org, Address: 17 Main St, Hubballi"
+    },
+    "expected_pii": [
+      {
+        "type": "EMAIL_ADDRESS",
+        "value": "contact_7@company.org"
+      },
+      {
+        "type": "PHONE_NUMBER",
+        "value": "9111122207"
+      },
+      {
+        "type": "PERSON",
+        "value": "Wridesh Jhaveri"
+      }
+    ],
+    "protected_values": [
+      "contact_7@company.org",
+      "9111122207",
+      "Wridesh Jhaveri"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-099",
+    "category": "MULTI_PII",
+    "tool_name": "send_email",
+    "user_prompt": "Email composite profile for Harrison Bandi at contact_8@company.org phone 9111122208 address 18 Main St, Hubballi",
+    "arguments": {
+      "to": "contact_8@company.org",
+      "subject": "Composite Profile",
+      "body": "Name: Harrison Bandi, Phone: 9111122208, Email: contact_8@company.org, Address: 18 Main St, Hubballi"
+    },
+    "expected_pii": [
+      {
+        "type": "EMAIL_ADDRESS",
+        "value": "contact_8@company.org"
+      },
+      {
+        "type": "PHONE_NUMBER",
+        "value": "9111122208"
+      },
+      {
+        "type": "PERSON",
+        "value": "Harrison Bandi"
+      }
+    ],
+    "protected_values": [
+      "contact_8@company.org",
+      "9111122208",
+      "Harrison Bandi"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  },
+  {
+    "id": "TC-100",
+    "category": "MULTI_PII",
+    "tool_name": "send_email",
+    "user_prompt": "Email composite profile for Chanakya Konda at contact_9@company.org phone 9111122209 address 19 Main St, Hubballi",
+    "arguments": {
+      "to": "contact_9@company.org",
+      "subject": "Composite Profile",
+      "body": "Name: Chanakya Konda, Phone: 9111122209, Email: contact_9@company.org, Address: 19 Main St, Hubballi"
+    },
+    "expected_pii": [
+      {
+        "type": "EMAIL_ADDRESS",
+        "value": "contact_9@company.org"
+      },
+      {
+        "type": "PHONE_NUMBER",
+        "value": "9111122209"
+      },
+      {
+        "type": "PERSON",
+        "value": "Chanakya Konda"
+      }
+    ],
+    "protected_values": [
+      "contact_9@company.org",
+      "9111122209",
+      "Chanakya Konda"
+    ],
+    "expected_action": "tokenize",
+    "expected_outcome": "sanitized",
+    "has_pii": true
+  }
+]
