@@ -212,6 +212,24 @@ class PIIDetector:
                 "score": 0.90,
             },
             {
+                "entity_type": "PERSON",
+                "pattern": re.compile(r"(?i)\b(?:profile for|name[:\s]+|customer[:\s]+|user[:\s]+|employee[:\s]+|mr\.?|mrs\.?|ms\.?|dr\.?)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\b"),
+                "score": 0.90,
+                "group": 1,
+            },
+            {
+                "entity_type": "LOCATION",
+                "pattern": re.compile(r"(?i)\b(?:address|residence|residential address|billing address)[:\s]+([^,\n]+(?:,\s*[^,\n]+){1,3})\b"),
+                "score": 0.85,
+                "group": 1,
+            },
+            {
+                "entity_type": "BANK_ACCOUNT",
+                "pattern": re.compile(r"(?i)\b(?:bank account|account\s*(?:no|number)?|routing\s*(?:no|number)?|acct)[:\s=]*(\d{9,18})\b"),
+                "score": 0.90,
+                "group": 1,
+            },
+            {
                 "entity_type": "IP_ADDRESS",
                 "pattern": re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}\b"),
                 "score": 0.85,
@@ -262,12 +280,12 @@ class PIIDetector:
 
             spans: List[PIISpan] = []
             for ent in entities:
-                value = ent.get("value", "")
+                value = str(ent.get("value", "")).strip()
                 raw_type = str(ent.get("entity_type", "PII")).upper()
                 entity_type = ENTITY_TYPE_MAP.get(raw_type, raw_type)
                 score = float(ent.get("score", 0.90))
 
-                if not value or not isinstance(value, str):
+                if not value or len(value) < 2:
                     continue
 
                 # Find all occurrences of this value in text
