@@ -69,6 +69,7 @@ class RestorationRequest(BaseModel):
     token: str
     session_id: str
 
+@app.get("/")
 @app.get("/api/health")
 def health_check():
     return {"status": "ok", "service": "PII Firewall for AI Agents"}
