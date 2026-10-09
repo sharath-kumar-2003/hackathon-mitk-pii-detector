@@ -158,76 +158,106 @@ class PIIDetector:
                 print(f"[PIIDetector] Failed to initialize Gemini client: {e}. Falling back to regex.")
                 self.client = None
 
-        # Regex patterns for structured PII (fast fallback + augmentation)
+        # Regex patterns for structured PII (fast fallback + high precision augmentation)
         self.regex_patterns: List[Dict[str, Any]] = [
-            {
-                "entity_type": "EMAIL_ADDRESS",
-                "pattern": re.compile(r"\b[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}\b"),
-                "score": 0.95,
-            },
-            {
-                "entity_type": "PHONE_NUMBER",
-                "pattern": re.compile(r"\b(?:\+?\d{1,3}[\s\-]?)?(?:\(?\d{3}\)?[\s\-]?)?\d{3}[\s\-]?\d{4}\b|\b(?:\+91[\-\s]?)?[6-9]\d{9}\b|\b\d{5}\s?\d{5}\b"),
-                "score": 0.95,
-            },
-            {
-                "entity_type": "CREDIT_CARD",
-                "pattern": re.compile(r"\b(?:\d{4}[\s\-]?){3}\d{4}\b|\b(?:\d[ -]*?){13,19}\b"),
-                "score": 0.90,
-            },
-            {
-                "entity_type": "CARD_PIN",
-                "pattern": re.compile(r"(?i)\b(?:pin|atm\s*pin|debit\s*card\s*pin|debit\s*pin|card\s*pin|cvv|cvc|otp|secret\s*pin)[:\s=]*(\d{3,6})\b"),
-                "score": 0.95,
-                "group": 1,
-            },
             {
                 "entity_type": "US_SSN",
                 "pattern": re.compile(r"\b\d{3}-\d{2}-\d{4}\b"),
-                "score": 0.95,
+                "score": 0.99,
             },
             {
-                "entity_type": "IN_AADHAAR",
-                "pattern": re.compile(r"\b\d{4}\s?\d{4}\s?\d{4}\b"),
-                "score": 0.90,
+                "entity_type": "EMAIL_ADDRESS",
+                "pattern": re.compile(r"\b[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}\b"),
+                "score": 0.99,
             },
             {
                 "entity_type": "IN_PAN",
                 "pattern": re.compile(r"\b[A-Z]{5}\d{4}[A-Z]{1}\b"),
-                "score": 0.90,
+                "score": 0.99,
+            },
+            {
+                "entity_type": "IN_AADHAAR",
+                "pattern": re.compile(r"\b\d{4}\s?\d{4}\s?\d{4}\b"),
+                "score": 0.99,
             },
             {
                 "entity_type": "DATE_OF_BIRTH",
-                "pattern": re.compile(r"\b(?:19|20)\d{2}[-/](?:0[1-9]|1[0-2])[-/](?:0[1-9]|[12]\d|3[01])\b"),
-                "score": 0.90,
+                "pattern": re.compile(r"\b(?:19|20)\d{2}[-/](?:0[1-9]|1[0-2])[-/](?:0[1-9]|[12]\d|3[01])\b|\b(?:0[1-9]|1[0-2])/(?:0[1-9]|[12]\d|3[01])/(?:19|20)\d{2}\b"),
+                "score": 0.99,
             },
             {
                 "entity_type": "DRIVER_LICENSE",
-                "pattern": re.compile(r"\bDL-[A-Za-z0-9]+\b"),
-                "score": 0.90,
+                "pattern": re.compile(r"(?i)\bDL-[A-Za-z0-9]+\b"),
+                "score": 0.99,
+            },
+            {
+                "entity_type": "DRIVER_LICENSE",
+                "pattern": re.compile(r"(?i)\bDriver\'s License[:\s]+([A-Za-z0-9\-]+)\b"),
+                "score": 0.99,
+                "group": 1,
+            },
+            {
+                "entity_type": "PASSPORT",
+                "pattern": re.compile(r"(?i)\bPassport(?:\s+No)?[:\s]*([A-Z0-9]+)\b"),
+                "score": 0.99,
+                "group": 1,
+            },
+            {
+                "entity_type": "CARD_PIN",
+                "pattern": re.compile(r"(?i)\b(?:pin|atm\s*pin|debit\s*card\s*pin|debit\s*pin|card\s*pin|cvv|cvc|otp|secret\s*pin)[:\s=]*(\d{3,6})\b"),
+                "score": 0.99,
+                "group": 1,
+            },
+            {
+                "entity_type": "BANK_ACCOUNT",
+                "pattern": re.compile(r"(?i)\b(?:bank account|account\s*(?:no|number)?|acct)[:\s=]*(\d{6,18})\b"),
+                "score": 0.99,
+                "group": 1,
+            },
+            {
+                "entity_type": "BANK_ACCOUNT",
+                "pattern": re.compile(r"(?i)\b(?:routing\s*(?:no|number)?|routing)[:\s=]*(\d{9})\b"),
+                "score": 0.99,
+                "group": 1,
+            },
+            {
+                "entity_type": "CREDIT_CARD",
+                "pattern": re.compile(r"\b(?:\d{4}[-\s]?(?:[0-9xX]{4}[-\s]?){2}\d{4}|\d{13,19})\b"),
+                "score": 0.98,
+            },
+            {
+                "entity_type": "SYNTHETIC_ID",
+                "pattern": re.compile(r"(?i)\b(?:Biometric Hash[:\s]*)?(sha256:[a-f0-9]{32,64}|(?:SYNTH-ID|AUTH-KEY|USER-REF)-\d+)\b"),
+                "score": 0.98,
+                "group": 1,
+            },
+            {
+                "entity_type": "LOCATION",
+                "pattern": re.compile(r"(?i)\b(?:Residential Address|Billing Address|Address)[:\s]+([^,\n\(\)]+(?:,\s*[^,\n\(\)]+){1,3}?,\s*[A-Z]{2}\s*\d{5}(?:-\d{4})?)\b"),
+                "score": 0.96,
+                "group": 1,
+            },
+            {
+                "entity_type": "PERSON",
+                "pattern": re.compile(r"(?i)\b(?:profile for|name[:\s]+|customer[:\s]+|user[:\s]+|employee[:\s]+|mr\.?|mrs\.?|ms\.?|dr\.?)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\b"),
+                "score": 0.95,
+                "group": 1,
+            },
+            {
+                "entity_type": "PHONE_NUMBER",
+                "pattern": re.compile(r"(?i)\b(?:mobile|phone|cell|tel|landline|home landline)[:\s]*(\+?[0-9\-\s\(\)]{7,18})\b"),
+                "score": 0.95,
+                "group": 1,
+            },
+            {
+                "entity_type": "PHONE_NUMBER",
+                "pattern": re.compile(r"\b(?:\+1[-.\s]?)?\(?[2-9]\d{2}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b|\b(?:\+91[-\s]?)?[6-9]\d{9}\b"),
+                "score": 0.92,
             },
             {
                 "entity_type": "PASSPORT",
                 "pattern": re.compile(r"\b[A-Z][0-9]{7,9}\b"),
                 "score": 0.90,
-            },
-            {
-                "entity_type": "PERSON",
-                "pattern": re.compile(r"(?i)\b(?:profile for|name[:\s]+|customer[:\s]+|user[:\s]+|employee[:\s]+|mr\.?|mrs\.?|ms\.?|dr\.?)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)+)\b"),
-                "score": 0.90,
-                "group": 1,
-            },
-            {
-                "entity_type": "LOCATION",
-                "pattern": re.compile(r"(?i)\b(?:address|residence|residential address|billing address)[:\s]+([^,\n]+(?:,\s*[^,\n]+){1,3})\b"),
-                "score": 0.85,
-                "group": 1,
-            },
-            {
-                "entity_type": "BANK_ACCOUNT",
-                "pattern": re.compile(r"(?i)\b(?:bank account|account\s*(?:no|number)?|routing\s*(?:no|number)?|acct)[:\s=]*(\d{9,18})\b"),
-                "score": 0.90,
-                "group": 1,
             },
             {
                 "entity_type": "IP_ADDRESS",
@@ -238,11 +268,6 @@ class PIIDetector:
                 "entity_type": "URL",
                 "pattern": re.compile(r"https?://[^\s]+"),
                 "score": 0.85,
-            },
-            {
-                "entity_type": "SYNTHETIC_ID",
-                "pattern": re.compile(r"\b(?:SYNTH-ID|AUTH-KEY|USER-REF)-\d+\b"),
-                "score": 0.95,
             },
         ]
 
