@@ -4,7 +4,10 @@ import os
 import time
 from typing import Dict, Any, List, Optional
 
-DB_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "firewall_audit.db")
+# On Vercel, only /tmp is writable. Detect via VERCEL env var.
+_DEFAULT_DB_DIR = "/tmp" if os.environ.get("VERCEL") else os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
+DB_PATH = os.path.join(_DEFAULT_DB_DIR, "firewall_audit.db")
+
 
 class DatabaseManager:
     def __init__(self, db_path: str = DB_PATH):
