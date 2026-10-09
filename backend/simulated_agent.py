@@ -13,32 +13,33 @@ from google import genai
 from google.genai import types
 
 AGENT_SYSTEM_PROMPT = """You are an AI Agent with access to specific tools.
-Given a user prompt, choose the most appropriate tool and generate the structured JSON arguments.
+Given a user prompt, choose the most appropriate tool and generate structured JSON arguments.
+IMPORTANT: When the user provides rich text, documents, onboarding profiles, or data to process/summarize/send/audit, ALWAYS include the user's detailed text in the appropriate tool argument (such as "content", "notes", or "body").
 
 Available Tools:
-1. "customer_lookup": Use when searching, querying, or finding customer details.
+1. "document_summarizer": Use when summarizing, analyzing, processing, onboarding, or generating confirmations from user profiles, notes, documents, or structured text.
    Arguments:
-   - "customer_id": string (e.g. "cust_1001", "cust_1005" or extracted ID)
-   - "fields": array of strings (e.g. ["id", "name", "email", "status"])
+   - "title": document or request title (string)
+   - "content": the full text / profile / details provided by the user (string)
 
-2. "send_email": Use when sending messages, alerts, or emails.
+2. "send_email": Use when sending messages, alerts, emails, or notifications.
    Arguments:
    - "to": recipient email address (string)
    - "subject": subject line (string)
    - "body": message content containing the user's details/prompt (string)
 
-3. "internal_audit_tool": Use when auditing, verifying compliance, or logging records (PAN, Aadhaar, compliance notes).
+3. "internal_audit_tool": Use when auditing, verifying compliance, checking records, or logging identity details (PAN, Aadhaar, SSN, compliance notes).
    Arguments:
-   - "report_name": string (e.g. "Compliance Audit Report")
-   - "user_reference": string (e.g. "REF-SESSION-99" or user ID)
-   - "notes": details or prompt text (string)
+   - "report_name": string (e.g. "Compliance Onboarding Audit")
+   - "user_reference": string (e.g. "REF-SESSION-99" or user name/ID)
+   - "notes": full details or prompt text (string)
 
-4. "document_summarizer": Use when summarizing notes, articles, or documents.
+4. "customer_lookup": Use ONLY when simply querying or fetching an existing customer by ID (e.g. "look up cust_1001"). Do NOT use if the user provided new profile text to process.
    Arguments:
-   - "title": document title (string)
-   - "content": document text (string)
+   - "customer_id": string (e.g. "cust_1001")
+   - "fields": array of strings (e.g. ["id", "name", "email", "status"])
 
-5. "web_search": Default fallback for general queries, web lookups, or information retrieval.
+5. "web_search": Fallback for general web queries or search inquiries.
    Arguments:
    - "query": search query string
 
@@ -100,49 +101,51 @@ class SimulatedAgent:
 
     def _heuristic_routing(self, prompt: str) -> Dict[str, Any]:
         """Fast, deterministic fallback routing using pattern matching."""
-        # Intent 1: Customer lookup
+        p_lower = prompt.lower()
+
+        # Intent 1: Email sending
+        email_match = re.search(r"[\w\.-]+@[\w\.-]+\.\w+", prompt)
+        if "email" in p_lower or "send" in p_lower:
+            to_addr = email_match.group(0) if email_match else "support@enterprise.io"
+            return {
+                "tool_name": "send_email",
+                "arguments": {
+                    "to": to_addr,
+                    "subject": "Customer Notification & Verification",
+                    "body": prompt
+                }
+            }
+
+        # Intent 2: Profile processing / Onboarding / Summarization
+        if any(kw in p_lower for kw in ["onboard", "profile", "summar", "process", "confirm", "document", "report"]):
+            return {
+                "tool_name": "document_summarizer",
+                "arguments": {
+                    "title": "Customer Onboarding & System Deployment Profile",
+                    "content": prompt
+                }
+            }
+
+        # Intent 3: Internal audit & compliance
+        if any(kw in p_lower for kw in ["audit", "pan", "aadhaar", "ssn", "compliance", "license"]):
+            return {
+                "tool_name": "internal_audit_tool",
+                "arguments": {
+                    "report_name": "Automated Compliance Audit Report",
+                    "user_reference": "REF-USER-PROFILE",
+                    "notes": prompt
+                }
+            }
+
+        # Intent 4: Explicit Customer lookup (only for direct query/ID)
         cust_match = re.search(r"cust_\d+", prompt, re.IGNORECASE)
-        if cust_match or "customer" in prompt.lower() or "lookup" in prompt.lower():
+        if cust_match or ("lookup" in p_lower and len(prompt) < 80):
             cust_id = cust_match.group(0) if cust_match else "cust_1001"
             return {
                 "tool_name": "customer_lookup",
                 "arguments": {
                     "customer_id": cust_id,
                     "fields": ["id", "name", "email", "status"]
-                }
-            }
-
-        # Intent 2: Email sending
-        email_match = re.search(r"[\w\.-]+@[\w\.-]+\.\w+", prompt)
-        if "email" in prompt.lower() or "send" in prompt.lower() or email_match:
-            to_addr = email_match.group(0) if email_match else "test@example.com"
-            return {
-                "tool_name": "send_email",
-                "arguments": {
-                    "to": to_addr,
-                    "subject": "AI Agent Automated Notification",
-                    "body": prompt
-                }
-            }
-
-        # Intent 3: Internal audit
-        if "audit" in prompt.lower() or "pan" in prompt.lower() or "aadhaar" in prompt.lower():
-            return {
-                "tool_name": "internal_audit_tool",
-                "arguments": {
-                    "report_name": "Automated System Compliance Audit",
-                    "user_reference": "REF-SESSION-99",
-                    "notes": prompt
-                }
-            }
-
-        # Intent 4: Document summarization
-        if "summarize" in prompt.lower() or "summary" in prompt.lower() or "document" in prompt.lower():
-            return {
-                "tool_name": "document_summarizer",
-                "arguments": {
-                    "title": "User Submitted Document",
-                    "content": prompt
                 }
             }
 
