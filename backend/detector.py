@@ -88,6 +88,7 @@ ENTITY_TYPE_MAP = {
     "PHONE": "PHONE_NUMBER",
     "PHONE_NUMBER": "PHONE_NUMBER",
     "MOBILE": "PHONE_NUMBER",
+    "LANDLINE": "PHONE_NUMBER",
     "AADHAAR": "IN_AADHAAR",
     "AADHAAR_NUMBER": "IN_AADHAAR",
     "IN_AADHAAR": "IN_AADHAAR",
@@ -124,21 +125,23 @@ ENTITY_TYPE_MAP = {
     "URL": "URL",
     "DATE_OF_BIRTH": "DATE_OF_BIRTH",
     "DOB": "DATE_OF_BIRTH",
+    "PASSPORT": "PASSPORT",
+    "PASSPORT_NUMBER": "PASSPORT",
+    "DRIVER_LICENSE": "DRIVER_LICENSE",
+    "DRIVERS_LICENSE": "DRIVER_LICENSE",
+    "DRIVING_LICENSE": "DRIVER_LICENSE",
     "BANK_ACCOUNT": "BANK_ACCOUNT",
+    "ACCOUNT_NUMBER": "BANK_ACCOUNT",
+    "ROUTING_NUMBER": "BANK_ACCOUNT",
+    "MEDICAL_LICENSE": "MEDICAL_LICENSE",
     "SYNTHETIC_ID": "SYNTHETIC_ID",
+    "BIOMETRIC": "SYNTHETIC_ID",
+    "BIOMETRIC_HASH": "SYNTHETIC_ID",
 }
 
 
 class PIIDetector:
-    """AI-powered PII detector using Google Gemini API with regex augmentation.
-
-    Detection Strategy:
-      1. Google Gemini API (gemini-3.5-flash-lite) for deep contextual PII detection
-         - Detects: All PII types including contextual/paraphrased data
-      2. Regex patterns as fast fallback for structured PII formats
-         - Detects: Email, Phone, Credit/Debit Cards, PINs, SSN, Aadhaar, PAN, IPs, URLs, Synthetic IDs
-      3. Graceful degradation: if Gemini API fails, falls back to regex-only
-    """
+    """AI-powered PII detector using Google Gemini API with regex augmentation."""
 
     def __init__(self):
         api_key = os.environ.get("GEMINI_API_KEY", "")
@@ -164,7 +167,7 @@ class PIIDetector:
             },
             {
                 "entity_type": "PHONE_NUMBER",
-                "pattern": re.compile(r"\b(?:\+91[\-\s]?)?[6-9]\d{9}\b|\b\d{5}\s?\d{5}\b"),
+                "pattern": re.compile(r"\b(?:\+?\d{1,3}[\s\-]?)?(?:\(?\d{3}\)?[\s\-]?)?\d{3}[\s\-]?\d{4}\b|\b(?:\+91[\-\s]?)?[6-9]\d{9}\b|\b\d{5}\s?\d{5}\b"),
                 "score": 0.95,
             },
             {
@@ -191,6 +194,21 @@ class PIIDetector:
             {
                 "entity_type": "IN_PAN",
                 "pattern": re.compile(r"\b[A-Z]{5}\d{4}[A-Z]{1}\b"),
+                "score": 0.90,
+            },
+            {
+                "entity_type": "DATE_OF_BIRTH",
+                "pattern": re.compile(r"\b(?:19|20)\d{2}[-/](?:0[1-9]|1[0-2])[-/](?:0[1-9]|[12]\d|3[01])\b"),
+                "score": 0.90,
+            },
+            {
+                "entity_type": "DRIVER_LICENSE",
+                "pattern": re.compile(r"\bDL-[A-Za-z0-9]+\b"),
+                "score": 0.90,
+            },
+            {
+                "entity_type": "PASSPORT",
+                "pattern": re.compile(r"\b[A-Z][0-9]{7,9}\b"),
                 "score": 0.90,
             },
             {
