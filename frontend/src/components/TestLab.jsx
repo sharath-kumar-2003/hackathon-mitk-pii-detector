@@ -196,18 +196,39 @@ function RestoredOutput({ text, details }) {
 }
 
 export default function TestLab({ onRefreshAll }) {
-  const [mode, setMode] = useState('agent');
-  const [prompt, setPrompt] = useState(SAMPLE_PROMPTS[0].value);
-  const [sessionId, setSessionId] = useState('session_' + Math.random().toString(36).substr(2, 6));
-  const [directTool, setDirectTool] = useState('document_summarizer');
-  const [directArgs, setDirectArgs] = useState(JSON.stringify({
+  const [mode, setMode] = useState(() => localStorage.getItem('test_lab_mode') || 'agent');
+  const [prompt, setPrompt] = useState(() => localStorage.getItem('test_lab_prompt') ?? SAMPLE_PROMPTS[0].value);
+  const [sessionId, setSessionId] = useState(() => localStorage.getItem('test_lab_session_id') || ('session_' + Math.random().toString(36).substr(2, 6)));
+  const [directTool, setDirectTool] = useState(() => localStorage.getItem('test_lab_direct_tool') || 'document_summarizer');
+  const [directArgs, setDirectArgs] = useState(() => localStorage.getItem('test_lab_direct_args') || JSON.stringify({
     title: "Q3 Financial Report",
     content: "This report was prepared by John Michael Doe (SSN: 123-45-6789, Email: john.doe@enterprise.io, Phone: +1-555-019-2834). Account: 9876543210, routing 021000021.",
   }, null, 2));
-  const [protectionMode, setProtectionMode] = useState('');
-  const [result, setResult] = useState(null);
+  const [protectionMode, setProtectionMode] = useState(() => localStorage.getItem('test_lab_protection_mode') || '');
+  const [result, setResult] = useState(() => {
+    try {
+      const cached = localStorage.getItem('test_lab_result');
+      return cached ? JSON.parse(cached) : null;
+    } catch (e) {
+      return null;
+    }
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  useEffect(() => { localStorage.setItem('test_lab_mode', mode); }, [mode]);
+  useEffect(() => { localStorage.setItem('test_lab_prompt', prompt); }, [prompt]);
+  useEffect(() => { localStorage.setItem('test_lab_session_id', sessionId); }, [sessionId]);
+  useEffect(() => { localStorage.setItem('test_lab_direct_tool', directTool); }, [directTool]);
+  useEffect(() => { localStorage.setItem('test_lab_direct_args', directArgs); }, [directArgs]);
+  useEffect(() => { localStorage.setItem('test_lab_protection_mode', protectionMode); }, [protectionMode]);
+  useEffect(() => {
+    if (result) {
+      localStorage.setItem('test_lab_result', JSON.stringify(result));
+    } else {
+      localStorage.removeItem('test_lab_result');
+    }
+  }, [result]);
 
   const handleRun = async (e) => {
     e.preventDefault();
