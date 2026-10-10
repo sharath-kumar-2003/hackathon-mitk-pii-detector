@@ -4,20 +4,34 @@ import os
 import time
 from typing import Dict, Any, List, Optional
 
-# On Vercel, only /tmp is writable. Detect via VERCEL env var.
-_DEFAULT_DB_DIR = "/tmp" if os.environ.get("VERCEL") else os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
+# On Vercel or Serverless environments, default to /tmp
+_DEFAULT_DB_DIR = "/tmp" if (os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME") or not os.access(os.path.dirname(os.path.dirname(__file__)), os.W_OK)) else os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
 DB_PATH = os.path.join(_DEFAULT_DB_DIR, "firewall_audit.db")
 
 
 class DatabaseManager:
     def __init__(self, db_path: str = DB_PATH):
         self.db_path = db_path
-        self.init_db()
+        try:
+            self.init_db()
+        except Exception as e:
+            print(f"[DatabaseManager] Warning during init_db ({self.db_path}): {e}. Switching to /tmp/firewall_audit.db")
+            self.db_path = "/tmp/firewall_audit.db"
+            try:
+                self.init_db()
+            except Exception as e2:
+                print(f"[DatabaseManager] Secondary init error: {e2}")
 
     def get_connection(self):
-        conn = sqlite3.connect(self.db_path)
-        conn.row_factory = sqlite3.Row
-        return conn
+        try:
+            conn = sqlite3.connect(self.db_path)
+            conn.row_factory = sqlite3.Row
+            return conn
+        except Exception as e:
+            print(f"[DatabaseManager] get_connection error for {self.db_path}: {e}")
+            conn = sqlite3.connect("/tmp/firewall_audit.db")
+            conn.row_factory = sqlite3.Row
+            return conn
 
     def init_db(self):
         os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
