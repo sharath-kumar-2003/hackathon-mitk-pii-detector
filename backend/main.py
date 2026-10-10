@@ -74,7 +74,17 @@ class RestorationRequest(BaseModel):
 @app.get("/")
 @app.get("/api/health")
 def health_check():
-    return {"status": "ok", "service": "PII Firewall for AI Agents"}
+    return {
+        "status": "ok",
+        "service": "PII Firewall for AI Agents",
+        "gemini": detector.gemini_status,
+    }
+
+@app.get("/api/gemini/status")
+def gemini_status():
+    """Returns current Gemini API status including quota info."""
+    return detector.gemini_status
+
 
 @app.post("/api/agent/run")
 def run_agent(req: AgentRequest):

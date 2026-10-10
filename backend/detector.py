@@ -12,6 +12,7 @@ gateway.py, tokenizer.py, and all consumers work without changes.
 import re
 import os
 import json
+import time
 from dataclasses import dataclass
 from typing import Dict, Any, List, Optional
 
@@ -146,6 +147,10 @@ class PIIDetector:
     def __init__(self):
         api_key = os.environ.get("GEMINI_API_KEY", "")
         self.model_name = os.environ.get("GEMINI_MODEL", "gemini-3.8-flash")
+        # Quota tracking: timestamp when quota resets (None = not exhausted)
+        self._quota_reset_at: Optional[float] = None
+        self._quota_exhausted: bool = False
+
         if not api_key:
             print("[PIIDetector] WARNING: GEMINI_API_KEY not set. Will use regex-only detection.")
             print("[PIIDetector] Set GEMINI_API_KEY in your .env or environment variables.")
@@ -157,6 +162,26 @@ class PIIDetector:
             except Exception as e:
                 print(f"[PIIDetector] Failed to initialize Gemini client: {e}. Falling back to regex.")
                 self.client = None
+
+    @property
+    def gemini_status(self) -> Dict[str, Any]:
+        """Returns current Gemini API status (active, quota_exhausted, or disabled)."""
+        if self.client is None:
+            return {"status": "disabled", "reason": "No API key or client init failed"}
+        if self._quota_exhausted:
+            remaining = 0
+            if self._quota_reset_at:
+                remaining = max(0, int(self._quota_reset_at - time.time()))
+            hours, secs = divmod(remaining, 3600)
+            mins = secs // 60
+            return {
+                "status": "quota_exhausted",
+                "reason": "Daily free-tier quota exceeded (20 req/day)",
+                "resets_in_seconds": remaining,
+                "resets_in": f"{hours}h {mins}m",
+                "fallback": "regex-only detection active",
+            }
+        return {"status": "active", "model": self.model_name}
 
         # Regex patterns for structured PII (fast fallback + high precision augmentation)
         self.regex_patterns: List[Dict[str, Any]] = [
@@ -276,6 +301,19 @@ class PIIDetector:
         if not self.client:
             return []
 
+        # Skip if quota is known to be exhausted and reset time hasn't passed
+        if self._quota_exhausted and self._quota_reset_at:
+            if time.time() < self._quota_reset_at:
+                remaining = int(self._quota_reset_at - time.time())
+                hours, secs = divmod(remaining, 3600)
+                print(f"[PIIDetector] Quota exhausted. Skipping Gemini call. Resets in {hours}h {secs//60}m. Using regex fallback.")
+                return []
+            else:
+                # Quota likely reset — try again
+                self._quota_exhausted = False
+                self._quota_reset_at = None
+                print("[PIIDetector] Quota reset window passed. Retrying Gemini API.")
+
         try:
             config = types.GenerateContentConfig(
                 system_instruction=PII_SYSTEM_PROMPT,
@@ -302,6 +340,9 @@ class PIIDetector:
 
             if not isinstance(entities, list):
                 return []
+
+            # Successful call — clear any quota flag
+            self._quota_exhausted = False
 
             spans: List[PIISpan] = []
             for ent in entities:
@@ -330,7 +371,20 @@ class PIIDetector:
             return spans
 
         except Exception as e:
-            print(f"[PIIDetector] Gemini API call failed: {e}")
+            err_str = str(e)
+            # Handle quota exhaustion (429) — parse retry delay if available
+            if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str:
+                self._quota_exhausted = True
+                retry_seconds = 86400  # Default: 24h
+                import re as _re
+                match = _re.search(r"retry[_ ]in[\s\']*(\d+)s", err_str, _re.IGNORECASE)
+                if match:
+                    retry_seconds = int(match.group(1))
+                self._quota_reset_at = time.time() + retry_seconds
+                hours, secs = divmod(retry_seconds, 3600)
+                print(f"[PIIDetector] ⚠️  Gemini quota EXHAUSTED. Resets in {hours}h {secs//60}m. Switching to regex-only fallback.")
+            else:
+                print(f"[PIIDetector] Gemini API call failed: {e}")
             return []
 
     def _run_regex(self, text: str) -> List[PIISpan]:
