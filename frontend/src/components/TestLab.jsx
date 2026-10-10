@@ -7,9 +7,29 @@ const SAMPLE_PROMPTS = [
   { label: 'Audit Tool + PAN', value: 'Create audit report with PAN ABCDE1234F for user Ravi Kumar, Aadhaar 9876 5432 1098' },
   { label: 'Customer Lookup', value: 'Customer lookup for cust_1001 with fields status, email' },
   { label: 'Full Onboarding Profile', value: "Process the customer onboarding profile for John Michael Doe (SSN: 123-45-6789, DOB: 1985-04-12, Driver's License: DL-987654321, Passport No: A12345678, Tax ID/PAN: ABCDE1234F, Personal Email: john.doe@personal.com, Work Email: j.doe@enterprise.io, Mobile: +1-555-019-2834, Home Landline: +1-555-019-8765, Residential Address: 742 Evergreen Terrace, Springfield, IL 62704, Credit Card: 4532-xxxx-xxxx-8891 expiring 08/28 with CVV 492, Bank Account: 9876543210 routing 021000021)" },
+  { label: '🚫 Block: Unknown Tool', value: 'Use the payment_gateway tool to transfer $5000 to account 9876543210, routing 021000021, for John Doe SSN 123-45-6789', _block: true },
+  { label: '🚫 Block: Unpermitted Field', value: 'Send email with extra hidden_data field containing SSN 123-45-6789 and card 4532015112830366', _block: true },
 ];
 
 const DIRECT_TOOLS = ['web_search', 'send_email', 'customer_lookup', 'internal_audit_tool', 'document_summarizer'];
+
+const DIRECT_BLOCK_PRESETS = [
+  {
+    label: '🚫 Unknown Tool',
+    tool: 'payment_gateway',
+    args: { account: '9876543210', routing: '021000021', amount: 5000, ssn: '123-45-6789' }
+  },
+  {
+    label: '🚫 Unpermitted Field (send_email)',
+    tool: 'send_email',
+    args: { to: 'user@example.com', subject: 'Test', body: 'Hello', hidden_data: 'SSN: 123-45-6789', raw_pii: 'card: 4532015112830366' }
+  },
+  {
+    label: '🚫 Unpermitted Field (web_search)',
+    tool: 'web_search',
+    args: { query: 'search term', user_id: 'usr_123', raw_ssn: '123-45-6789' }
+  },
+];
 
 function ActionBadge({ action, decision }) {
   const key = (action || decision || '').toLowerCase();
@@ -224,13 +244,37 @@ export default function TestLab({ onRefreshAll }) {
         </form>
 
         {mode === 'agent' && (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', paddingTop: '0.75rem', borderTop: '1px solid var(--border-subtle)' }}>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', alignSelf: 'center', marginRight: '0.25rem' }}>Presets:</span>
-            {SAMPLE_PROMPTS.map((s, i) => (
-              <button key={i} className="btn btn-secondary"
-                style={{ fontSize: '0.725rem', padding: '0.2rem 0.5rem' }}
-                onClick={() => setPrompt(s.value)}>{s.label}</button>
-            ))}
+          <div style={{ paddingTop: '0.75rem', borderTop: '1px solid var(--border-subtle)' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', marginBottom: '0.4rem' }}>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', alignSelf: 'center', marginRight: '0.25rem' }}>Presets:</span>
+              {SAMPLE_PROMPTS.filter(s => !s._block).map((s, i) => (
+                <button key={i} className="btn btn-secondary"
+                  style={{ fontSize: '0.725rem', padding: '0.2rem 0.5rem' }}
+                  onClick={() => setPrompt(s.value)}>{s.label}</button>
+              ))}
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.72rem', color: '#ef4444', alignSelf: 'center', marginRight: '0.25rem', fontWeight: 600 }}>Block Demos:</span>
+              {SAMPLE_PROMPTS.filter(s => s._block).map((s, i) => (
+                <button key={i} className="btn btn-secondary"
+                  style={{ fontSize: '0.725rem', padding: '0.2rem 0.5rem', borderColor: 'rgba(239,68,68,0.4)', color: '#ef4444' }}
+                  onClick={() => setPrompt(s.value)}>{s.label}</button>
+              ))}
+            </div>
+          </div>
+        )}
+        {mode === 'direct' && (
+          <div style={{ paddingTop: '0.75rem', borderTop: '1px solid var(--border-subtle)' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.72rem', color: '#ef4444', alignSelf: 'center', marginRight: '0.25rem', fontWeight: 600 }}>Block Presets:</span>
+              {DIRECT_BLOCK_PRESETS.map((p, i) => (
+                <button key={i} className="btn btn-secondary"
+                  style={{ fontSize: '0.725rem', padding: '0.2rem 0.5rem', borderColor: 'rgba(239,68,68,0.4)', color: '#ef4444' }}
+                  onClick={() => { setDirectTool(p.tool); setDirectArgs(JSON.stringify(p.args, null, 2)); }}>
+                  {p.label}
+                </button>
+              ))}
+            </div>
           </div>
         )}
       </div>
@@ -335,17 +379,123 @@ export default function TestLab({ onRefreshAll }) {
             </div>
           )}
 
-          {/* Block / Allow banner */}
-          {(action === 'block' || (action !== 'redact' && action !== 'tokenize')) && (
+          {/* ===== BLOCKED REQUEST DISPLAY ===== */}
+          {action === 'block' && (
+            <div style={{ marginBottom: '1.25rem' }}>
+              {/* Big blocked banner */}
+              <div style={{
+                background: 'rgba(239,68,68,0.06)',
+                border: '2px solid rgba(239,68,68,0.4)',
+                borderRadius: '10px',
+                padding: '1.5rem',
+                marginBottom: '1rem',
+                position: 'relative',
+                overflow: 'hidden'
+              }}>
+                {/* Background watermark */}
+                <div style={{
+                  position: 'absolute', right: '1.5rem', top: '50%', transform: 'translateY(-50%)',
+                  fontSize: '5rem', opacity: 0.06, fontWeight: 900, color: '#ef4444', userSelect: 'none',
+                  lineHeight: 1
+                }}>BLOCKED</div>
+
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '1rem', position: 'relative' }}>
+                  {/* Shield icon */}
+                  <div style={{
+                    width: '48px', height: '48px', borderRadius: '50%',
+                    background: 'rgba(239,68,68,0.12)', border: '2px solid rgba(239,68,68,0.35)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: '1.5rem', flexShrink: 0
+                  }}>🛡️</div>
+
+                  <div style={{ flex: 1 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.4rem' }}>
+                      <span style={{ fontSize: '1rem', fontWeight: 700, color: '#ef4444' }}>Request Blocked by Firewall Policy</span>
+                      <span className="badge badge-danger">BLOCK</span>
+                    </div>
+                    <div style={{ fontSize: '0.82rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '0.75rem' }}>
+                      {gw.reason}
+                    </div>
+
+                    {/* Block reason breakdown */}
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.75rem', color: 'var(--text-muted)', background: 'var(--bg-subtle)', border: '1px solid var(--border-subtle)', borderRadius: '4px', padding: '0.25rem 0.6rem' }}>
+                        <span>🔒</span> <span>Fail-Closed Security Mode</span>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.75rem', color: 'var(--text-muted)', background: 'var(--bg-subtle)', border: '1px solid var(--border-subtle)', borderRadius: '4px', padding: '0.25rem 0.6rem' }}>
+                        <span>🚫</span> <span>Tool Never Reached</span>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.75rem', color: 'var(--text-muted)', background: 'var(--bg-subtle)', border: '1px solid var(--border-subtle)', borderRadius: '4px', padding: '0.25rem 0.6rem' }}>
+                        <span>📋</span> <span>Logged to Audit Trail</span>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontSize: '0.75rem', color: '#22c55e', background: 'rgba(34,197,94,0.06)', border: '1px solid rgba(34,197,94,0.25)', borderRadius: '4px', padding: '0.25rem 0.6rem' }}>
+                        <span>✅</span> <span>Zero Data Exposure</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Pipeline visualization — blocked at gateway */}
+              <div className="card">
+                <div className="card-header">
+                  <span className="card-title">Request Interception Flow</span>
+                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>Policy evaluated in {Math.round(gw.timings_ms?.policy_ms || 0)}ms</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0', overflowX: 'auto', padding: '0.75rem 0' }}>
+                  {[
+                    { label: 'AI Agent', icon: '🤖', color: 'var(--text-primary)', bg: 'var(--bg-subtle)', status: 'sent' },
+                    { label: '→', arrow: true },
+                    { label: 'PII Firewall Gateway', icon: '🛡️', color: '#ef4444', bg: 'rgba(239,68,68,0.08)', border: '2px solid rgba(239,68,68,0.4)', status: 'blocked' },
+                    { label: '✗', arrow: true, blocked: true },
+                    { label: 'External Tool', icon: '🔧', color: 'var(--text-muted)', bg: 'rgba(0,0,0,0.03)', opacity: 0.4, status: 'never_reached' },
+                  ].map((step, i) => step.arrow ? (
+                    <div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 0.5rem' }}>
+                      <span style={{ fontSize: step.blocked ? '1.1rem' : '1.2rem', color: step.blocked ? '#ef4444' : 'var(--text-muted)', fontWeight: 700 }}>{step.label}</span>
+                      {step.blocked && <span style={{ fontSize: '0.6rem', color: '#ef4444', fontWeight: 600, marginTop: '0.15rem' }}>STOPPED</span>}
+                    </div>
+                  ) : (
+                    <div key={i} style={{
+                      display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.3rem',
+                      background: step.bg, border: step.border || '1px solid var(--border-subtle)',
+                      borderRadius: '8px', padding: '0.6rem 1rem', minWidth: '110px', opacity: step.opacity || 1
+                    }}>
+                      <span style={{ fontSize: '1.4rem' }}>{step.icon}</span>
+                      <span style={{ fontSize: '0.72rem', fontWeight: 600, color: step.color, textAlign: 'center' }}>{step.label}</span>
+                      {step.status === 'blocked' && <span style={{ fontSize: '0.62rem', color: '#ef4444', fontWeight: 700 }}>▼ BLOCKED HERE</span>}
+                      {step.status === 'never_reached' && <span style={{ fontSize: '0.62rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>never reached</span>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Original rejected payload */}
+              {result.tool_request && (
+                <div className="card">
+                  <div className="card-header">
+                    <span className="card-title">Rejected Payload</span>
+                    <span style={{ fontSize: '0.72rem', color: '#ef4444', fontWeight: 600 }}>Never forwarded to tool</span>
+                  </div>
+                  <pre className="code-block" style={{ border: '1px solid rgba(239,68,68,0.2)', background: 'rgba(239,68,68,0.03)' }}>
+                    {JSON.stringify(result.tool_request.arguments, null, 2)}
+                  </pre>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Allow / No-PII banner (non-blocked, non-sanitized) */}
+          {action !== 'block' && action !== 'redact' && action !== 'tokenize' && (
             <div className="card">
               <div style={{ fontWeight: 600, fontSize: '0.85rem', color: 'var(--text-primary)', marginBottom: '0.2rem' }}>
-                {action === 'block' ? 'Request Blocked by Policy' : piiDetected.length === 0 ? 'No PII Detected — Passed Through' : 'Allowed'}
+                {piiDetected.length === 0 ? 'No PII Detected — Passed Through' : 'Allowed'}
               </div>
               <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)' }}>{gw.reason}</div>
             </div>
           )}
 
-          {/* Pipeline Steps */}
+          {/* Pipeline Steps — only shown when NOT blocked */}
+          {action !== 'block' && (
           <div className="grid-cols-2">
             {result.tool_request && (
               <div className="card">
@@ -431,8 +581,7 @@ export default function TestLab({ onRefreshAll }) {
               )}
             </div>
           </div>
-
-          {/* PII Breakdown Table */}
+          )} {/* end pipeline steps */}
           {piiDetected.length > 0 && (
             <div className="card">
               <div className="card-header">
