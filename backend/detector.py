@@ -384,7 +384,7 @@ class PIIDetector:
                     retry_seconds = int(match.group(1))
                 self._quota_reset_at = time.time() + retry_seconds
                 hours, secs = divmod(retry_seconds, 3600)
-                print(f"[PIIDetector] ⚠️  Gemini quota EXHAUSTED. Resets in {hours}h {secs//60}m. Switching to regex-only fallback.")
+                print(f"[PIIDetector] WARNING: Gemini quota EXHAUSTED. Resets in {hours}h {secs//60}m. Switching to regex-only fallback.")
             else:
                 print(f"[PIIDetector] Gemini API call failed: {e}")
             return []
@@ -490,4 +490,13 @@ class PIIDetector:
         elif isinstance(data, list):
             for item in data:
                 detected.extend(self.analyze_payload(item))
-        return detected
+
+        # Deduplicate detected PII entities by (entity_type, value)
+        seen = set()
+        deduped = []
+        for d in detected:
+            key = (d["entity_type"], d["value"])
+            if key not in seen:
+                seen.add(key)
+                deduped.append(d)
+        return deduped
