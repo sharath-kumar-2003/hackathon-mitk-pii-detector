@@ -163,26 +163,6 @@ class PIIDetector:
                 print(f"[PIIDetector] Failed to initialize Gemini client: {e}. Falling back to regex.")
                 self.client = None
 
-    @property
-    def gemini_status(self) -> Dict[str, Any]:
-        """Returns current Gemini API status (active, quota_exhausted, or disabled)."""
-        if self.client is None:
-            return {"status": "disabled", "reason": "No API key or client init failed"}
-        if self._quota_exhausted:
-            remaining = 0
-            if self._quota_reset_at:
-                remaining = max(0, int(self._quota_reset_at - time.time()))
-            hours, secs = divmod(remaining, 3600)
-            mins = secs // 60
-            return {
-                "status": "quota_exhausted",
-                "reason": "Daily free-tier quota exceeded (20 req/day)",
-                "resets_in_seconds": remaining,
-                "resets_in": f"{hours}h {mins}m",
-                "fallback": "regex-only detection active",
-            }
-        return {"status": "active", "model": self.model_name}
-
         # Regex patterns for structured PII (fast fallback + high precision augmentation)
         self.regex_patterns: List[Dict[str, Any]] = [
             {
@@ -269,8 +249,10 @@ class PIIDetector:
                 "group": 1,
             },
             {
+                # Context-based phone: strip \s from char class to avoid
+                # greedily capturing trailing spaces and creating duplicate spans
                 "entity_type": "PHONE_NUMBER",
-                "pattern": re.compile(r"(?i)\b(?:mobile|phone|cell|tel|landline|home landline)[:\s]*(\+?[0-9\-\s\(\)]{7,18})\b"),
+                "pattern": re.compile(r"(?i)\b(?:mobile|phone|cell|tel|landline|home landline)[:\s]*(\+?[0-9\-\(\)]{7,18})\b"),
                 "score": 0.95,
                 "group": 1,
             },
@@ -295,6 +277,26 @@ class PIIDetector:
                 "score": 0.85,
             },
         ]
+
+    @property
+    def gemini_status(self) -> Dict[str, Any]:
+        """Returns current Gemini API status (active, quota_exhausted, or disabled)."""
+        if self.client is None:
+            return {"status": "disabled", "reason": "No API key or client init failed"}
+        if self._quota_exhausted:
+            remaining = 0
+            if self._quota_reset_at:
+                remaining = max(0, int(self._quota_reset_at - time.time()))
+            hours, secs = divmod(remaining, 3600)
+            mins = secs // 60
+            return {
+                "status": "quota_exhausted",
+                "reason": "Daily free-tier quota exceeded (20 req/day)",
+                "resets_in_seconds": remaining,
+                "resets_in": f"{hours}h {mins}m",
+                "fallback": "regex-only detection active",
+            }
+        return {"status": "active", "model": self.model_name}
 
     def _call_gemini(self, text: str) -> List[PIISpan]:
         """Call Google Gemini API to detect PII entities in text."""
