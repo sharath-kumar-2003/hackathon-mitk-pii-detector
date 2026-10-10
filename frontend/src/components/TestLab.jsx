@@ -46,7 +46,7 @@ function ActionBadge({ action, decision }) {
 function HighlightedOriginal({ text, piiEntities }) {
   if (!text || typeof text !== 'string') return <span style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>—</span>;
   if (!piiEntities || piiEntities.length === 0) {
-    return <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', whiteSpace: 'pre-wrap', wordBreak: 'break-all', color: 'var(--text-secondary)' }}>{text}</span>;
+    return <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', whiteSpace: 'pre-wrap', wordBreak: 'break-all', color: '#ffffff' }}>{text}</span>;
   }
 
   const intervals = [];
@@ -63,7 +63,7 @@ function HighlightedOriginal({ text, piiEntities }) {
   }
 
   if (intervals.length === 0) {
-    return <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', whiteSpace: 'pre-wrap', wordBreak: 'break-all', color: 'var(--text-secondary)' }}>{text}</span>;
+    return <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', whiteSpace: 'pre-wrap', wordBreak: 'break-all', color: '#ffffff' }}>{text}</span>;
   }
 
   const sorted = intervals.sort((a, b) => a.start - b.start);
@@ -95,7 +95,7 @@ function HighlightedOriginal({ text, piiEntities }) {
             borderRadius: '2px', padding: '0 3px', border: '1px solid rgba(244,63,94,0.3)',
           }} title={p.type}>{p.text}</mark>
         ) : (
-          <span key={i} style={{ color: 'var(--text-secondary)' }}>{p.text}</span>
+          <span key={i} style={{ color: '#ffffff' }}>{p.text}</span>
         )
       )}
     </span>
@@ -145,7 +145,7 @@ function SanitizedOutput({ text }) {
             }} title="Tokenized">{p}</mark>
           );
         }
-        return <span key={i} style={{ color: 'var(--text-secondary)' }}>{p}</span>;
+        return <span key={i} style={{ color: '#ffffff' }}>{p}</span>;
       })}
     </span>
   );
@@ -158,7 +158,7 @@ function RestoredOutput({ text, details }) {
 
   if (successfulDetails.length === 0) {
     return (
-      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', whiteSpace: 'pre-wrap', wordBreak: 'break-all', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', whiteSpace: 'pre-wrap', wordBreak: 'break-all', color: '#ffffff', lineHeight: 1.6 }}>
         {str}
       </span>
     );
@@ -167,7 +167,7 @@ function RestoredOutput({ text, details }) {
   const valuesToHighlight = [...new Set(successfulDetails.map(d => d.value).filter(Boolean))];
   if (valuesToHighlight.length === 0) {
     return (
-      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', whiteSpace: 'pre-wrap', wordBreak: 'break-all', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', whiteSpace: 'pre-wrap', wordBreak: 'break-all', color: '#ffffff', lineHeight: 1.6 }}>
         {str}
       </span>
     );
@@ -189,7 +189,7 @@ function RestoredOutput({ text, details }) {
             }} title="Restored PII">{p}</mark>
           );
         }
-        return <span key={i} style={{ color: 'var(--text-secondary)' }}>{p}</span>;
+        return <span key={i} style={{ color: '#ffffff' }}>{p}</span>;
       })}
     </span>
   );
