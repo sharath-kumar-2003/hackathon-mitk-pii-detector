@@ -4,8 +4,8 @@ import os
 import time
 from typing import Dict, Any, List, Optional
 
-# On Vercel or Serverless environments, default to /tmp
-_DEFAULT_DB_DIR = "/tmp" if (os.environ.get("VERCEL") or os.environ.get("AWS_LAMBDA_FUNCTION_NAME") or not os.access(os.path.dirname(os.path.dirname(__file__)), os.W_OK)) else os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
+# On Vercel, only /tmp is writable. Detect via VERCEL env var.
+_DEFAULT_DB_DIR = "/tmp" if os.environ.get("VERCEL") else os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
 DB_PATH = os.path.join(_DEFAULT_DB_DIR, "firewall_audit.db")
 
 

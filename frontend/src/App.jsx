@@ -22,17 +22,13 @@ import {
 } from './services/api';
 
 function App() {
-  const [activeTab, setActiveTab] = useState(() => localStorage.getItem('active_tab') || 'sandbox');
+  const [activeTab, setActiveTab] = useState('sandbox');
   const [metrics, setMetrics] = useState(null);
   const [logs, setLogs] = useState([]);
   const [policies, setPolicies] = useState([]);
   const [loadingEval, setLoadingEval] = useState(false);
   const [loadingReset, setLoadingReset] = useState(false);
   const [error, setError] = useState(null);
-
-  useEffect(() => {
-    localStorage.setItem('active_tab', activeTab);
-  }, [activeTab]);
 
   const loadMetrics = useCallback(async () => {
     try {
@@ -91,7 +87,6 @@ function App() {
     setError(null);
     try {
       await resetEvaluationData();
-      localStorage.removeItem('test_lab_result');
       setMetrics(null);
       setLogs([]);
       await refreshAll();
@@ -127,31 +122,31 @@ function App() {
       )}
 
       <main className="main-content">
-        <div style={{ display: activeTab === 'sandbox' ? 'block' : 'none' }}>
+        {activeTab === 'sandbox' && (
           <TestLab onRefreshAll={refreshAll} />
-        </div>
-        <div style={{ display: activeTab === 'overview' ? 'block' : 'none' }}>
+        )}
+        {activeTab === 'overview' && (
           <Overview metrics={metrics} />
-        </div>
-        <div style={{ display: activeTab === 'detection' ? 'block' : 'none' }}>
+        )}
+        {activeTab === 'detection' && (
           <DetectionAnalytics metrics={metrics} />
-        </div>
-        <div style={{ display: activeTab === 'leakage' ? 'block' : 'none' }}>
+        )}
+        {activeTab === 'leakage' && (
           <LeakagePrevention metrics={metrics} />
-        </div>
-        <div style={{ display: activeTab === 'restoration' ? 'block' : 'none' }}>
+        )}
+        {activeTab === 'restoration' && (
           <TokenRestoration metrics={metrics} onRefreshMetrics={loadMetrics} />
-        </div>
-        <div style={{ display: activeTab === 'performance' ? 'block' : 'none' }}>
+        )}
+        {activeTab === 'performance' && (
           <PerformanceAnalytics metrics={metrics} />
-        </div>
-        <div style={{ display: activeTab === 'logs' ? 'block' : 'none' }}>
+        )}
+        {activeTab === 'logs' && (
           <AuditLogs logs={logs} />
-        </div>
-        <div style={{ display: activeTab === 'policies' ? 'block' : 'none' }}>
+        )}
+        {activeTab === 'policies' && (
           <PolicyRegistry policies={policies} />
-        </div>
-        <div style={{ display: activeTab === 'evaluation' ? 'block' : 'none' }}>
+        )}
+        {activeTab === 'evaluation' && (
           <EvaluationSuite
             metrics={metrics}
             onRunEval={handleRunEval}
@@ -159,7 +154,7 @@ function App() {
             loadingEval={loadingEval}
             loadingReset={loadingReset}
           />
-        </div>
+        )}
       </main>
     </div>
   );
