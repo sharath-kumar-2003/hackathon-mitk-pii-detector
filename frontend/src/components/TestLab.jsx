@@ -82,49 +82,39 @@ function HighlightedOriginal({ text, piiEntities }) {
   );
 }
 
-function SanitizedOutput({ action, text }) {
+// Highlights both [REDACTED_*] (amber) and <TOKEN_ID> (blue) in any mix
+function SanitizedOutput({ text }) {
   if (!text) return <span style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>—</span>;
   const str = typeof text === 'string' ? text : JSON.stringify(text, null, 2);
 
-  if (action === 'redact') {
-    const parts = str.split(/(\[REDACTED_[A-Z_]+\])/g);
-    return (
-      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', lineHeight: 1.6, whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
-        {parts.map((p, i) =>
-          /^\[REDACTED_[A-Z_]+\]$/.test(p) ? (
+  // Split on BOTH redact placeholders and tokenize markers in one pass
+  const parts = str.split(/(\[REDACTED_[A-Z_]+\]|<[A-Z][A-Z0-9_]*_[A-Z0-9]+>)/g);
+
+  return (
+    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', lineHeight: 1.6, whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+      {parts.map((p, i) => {
+        if (/^\[REDACTED_[A-Z_]+\]$/.test(p)) {
+          return (
             <mark key={i} style={{
               background: 'rgba(251,191,36,0.12)', color: '#fbbf24',
               borderRadius: '3px', padding: '0 4px', border: '1px solid rgba(251,191,36,0.3)',
               fontWeight: 600, fontSize: '0.72rem',
-            }}>{p}</mark>
-          ) : (
-            <span key={i} style={{ color: 'var(--text-secondary)' }}>{p}</span>
-          )
-        )}
-      </span>
-    );
-  }
-
-  if (action === 'tokenize') {
-    const parts = str.split(/(<[A-Z0-9_]+>)/g);
-    return (
-      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', lineHeight: 1.6, whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
-        {parts.map((p, i) =>
-          /^<[A-Z0-9_]+>$/.test(p) ? (
+            }} title="Redacted">{p}</mark>
+          );
+        }
+        if (/^<[A-Z][A-Z0-9_]*_[A-Z0-9]+>$/.test(p)) {
+          return (
             <mark key={i} style={{
               background: 'rgba(56,189,248,0.12)', color: '#38bdf8',
               borderRadius: '3px', padding: '0 4px', border: '1px solid rgba(56,189,248,0.3)',
               fontWeight: 600, fontSize: '0.72rem',
-            }}>{p}</mark>
-          ) : (
-            <span key={i} style={{ color: 'var(--text-secondary)' }}>{p}</span>
-          )
-        )}
-      </span>
-    );
-  }
-
-  return <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', whiteSpace: 'pre-wrap', wordBreak: 'break-all', color: 'var(--text-secondary)' }}>{str}</span>;
+            }} title="Tokenized">{p}</mark>
+          );
+        }
+        return <span key={i} style={{ color: 'var(--text-secondary)' }}>{p}</span>;
+      })}
+    </span>
+  );
 }
 
 export default function TestLab({ onRefreshAll }) {
@@ -295,14 +285,31 @@ export default function TestLab({ onRefreshAll }) {
             </div>
           </div>
 
-          {/* Redaction / Tokenization Visualizer */}
-          {piiDetected.length > 0 && (action === 'redact' || action === 'tokenize') && (
+          {/* Redaction / Tokenization Visualizer — always show when PII was detected */}
+          {piiDetected.length > 0 && action !== 'block' && action !== 'allow' && (
             <div className="card">
               <div className="card-header">
                 <span className="card-title">
-                  {action === 'redact' ? 'Redaction Transformation' : 'Tokenization Transformation'}
+                  {(() => {
+                    const pv = gw.protected_values || [];
+                    const actions = [...new Set(pv.map(x => x.action))];
+                    if (actions.length === 1) {
+                      return actions[0] === 'REDACT' ? 'Redaction Transformation'
+                           : actions[0] === 'TOKENIZE' ? 'Tokenization Transformation'
+                           : 'Sanitization Transformation';
+                    }
+                    return 'Sanitization Transformation (Mixed)';
+                  })()}
                 </span>
-                <ActionBadge action={action} />
+                {/* Legend */}
+                <span style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                  {(gw.protected_values || []).some(x => x.action === 'REDACT') && (
+                    <span style={{ fontSize: '0.68rem', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.4)', borderRadius: '3px', padding: '0.1rem 0.4rem', background: 'rgba(251,191,36,0.08)' }}>■ REDACT</span>
+                  )}
+                  {(gw.protected_values || []).some(x => x.action === 'TOKENIZE') && (
+                    <span style={{ fontSize: '0.68rem', color: '#38bdf8', border: '1px solid rgba(56,189,248,0.4)', borderRadius: '3px', padding: '0.1rem 0.4rem', background: 'rgba(56,189,248,0.08)' }}>■ TOKENIZE</span>
+                  )}
+                </span>
               </div>
 
               {/* Side-by-side diff */}
@@ -321,7 +328,7 @@ export default function TestLab({ onRefreshAll }) {
                     Sanitized Payload (Safe)
                   </div>
                   <div style={{ background: 'var(--bg-dark)', borderRadius: '6px', padding: '0.75rem', border: '1px solid var(--border-color)', minHeight: '80px' }}>
-                    <SanitizedOutput action={action} text={gw.sanitized_arguments} />
+                    <SanitizedOutput text={gw.sanitized_arguments} />
                   </div>
                 </div>
               </div>
@@ -356,7 +363,7 @@ export default function TestLab({ onRefreshAll }) {
                 <ActionBadge action={action} decision={gw.action?.toUpperCase?.()} />
               </div>
               <div className="code-block" style={{ minHeight: '80px' }}>
-                <SanitizedOutput action={action} text={gw.sanitized_arguments} />
+                <SanitizedOutput text={gw.sanitized_arguments} />
               </div>
             </div>
 
