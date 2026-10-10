@@ -186,6 +186,8 @@ class EvaluationRunner:
             "total_requests": len(test_cases),
             "requests_summary": {
                 "allowed": sum(1 for r in test_case_results if r["actual_decision"] == "ALLOW"),
+                "redacted": sum(1 for r in test_case_results if r["actual_decision"] in ["REDACT"] or (r["actual_decision"] != "BLOCK" and r.get("expected_action") == "redact")),
+                "tokenized": sum(1 for r in test_case_results if r["actual_decision"] in ["TOKENIZE"] or (r["actual_decision"] != "BLOCK" and r.get("expected_action") == "tokenize")),
                 "sanitized": sum(1 for r in test_case_results if r["actual_decision"] in ["REDACT", "TOKENIZE"]),
                 "blocked": sum(1 for r in test_case_results if r["actual_decision"] == "BLOCK")
             },

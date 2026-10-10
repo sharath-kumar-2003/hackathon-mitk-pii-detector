@@ -166,7 +166,8 @@ def get_dashboard_metrics():
         }
 
     allowed = sum(1 for l in logs_to_use if l["policy_decision"] == "ALLOW")
-    sanitized = sum(1 for l in logs_to_use if l["policy_decision"] in ["REDACT", "TOKENIZE"])
+    redacted = sum(1 for l in logs_to_use if l["policy_decision"] == "REDACT" or l.get("sanitization_action") == "redact")
+    tokenized = sum(1 for l in logs_to_use if l["policy_decision"] == "TOKENIZE" or l.get("sanitization_action") == "tokenize")
     blocked = sum(1 for l in logs_to_use if l["policy_decision"] == "BLOCK")
 
     total_pii = sum(len(l["pii_detected"]) for l in logs_to_use)
@@ -179,7 +180,9 @@ def get_dashboard_metrics():
         "total_requests": total_logs,
         "requests_summary": {
             "allowed": allowed,
-            "sanitized": sanitized,
+            "redacted": redacted,
+            "tokenized": tokenized,
+            "sanitized": redacted + tokenized,
             "blocked": blocked
         },
         "detection_analytics": {

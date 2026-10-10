@@ -55,21 +55,27 @@ export default function Overview({ metrics }) {
           <div style={{ display: 'flex', gap: '0.85rem', flexDirection: 'column' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <span className="badge badge-success">Allowed</span> Explicitly Permitted
+                <span className="badge badge-success">ALLOWED</span> Permitted Payload
               </span>
-              <strong>{reqSummary.allowed}</strong>
+              <strong>{reqSummary.allowed || 0}</strong>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <span className="badge badge-info">Sanitized</span> Redacted / Tokenized
+                <span className="badge badge-warning">REDACTED</span> PII Masked & Anonymized
               </span>
-              <strong>{reqSummary.sanitized}</strong>
+              <strong>{reqSummary.redacted != null ? reqSummary.redacted : (reqSummary.sanitized || 0)}</strong>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <span className="badge badge-danger">Blocked</span> Policy Violation
+                <span className="badge badge-info">TOKENIZED</span> Vault Tokenized
               </span>
-              <strong>{reqSummary.blocked}</strong>
+              <strong>{reqSummary.tokenized != null ? reqSummary.tokenized : 0}</strong>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span className="badge badge-danger">BLOCKED</span> Policy Violation
+              </span>
+              <strong>{reqSummary.blocked || 0}</strong>
             </div>
           </div>
         </div>
