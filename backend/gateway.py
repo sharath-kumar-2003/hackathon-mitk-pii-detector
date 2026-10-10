@@ -231,7 +231,8 @@ class Gateway:
         # Step 7: Authorized Restoration of Mock Tool Response
         restoration_res = None
         if isinstance(tool_output, dict):
-            resp_str = str(tool_output)
+            import json as _json
+            resp_str = _json.dumps(tool_output)
             restoration_res = self.tokenizer.restore_text(resp_str, session_id)
 
         total_ms = (time.perf_counter() - start_total) * 1000.0

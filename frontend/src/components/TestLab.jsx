@@ -376,13 +376,58 @@ export default function TestLab({ onRefreshAll }) {
 
             <div className="card">
               <div className="card-header">
-                <span className="card-title">4. Tool Output & Restoration</span>
+                <span className="card-title">4. Tool Output &amp; Restoration</span>
+                {gw.restoration_result?.tokens_found?.length > 0 && (
+                  <span className="badge badge-info">
+                    {gw.restoration_result.tokens_found.length} token{gw.restoration_result.tokens_found.length !== 1 ? 's' : ''} restored
+                  </span>
+                )}
               </div>
-              <pre className="code-block">{JSON.stringify(gw.mock_tool_output, null, 2)}</pre>
-              {gw.restoration_result?.tokens_found?.length > 0 && (
-                <div style={{ marginTop: '0.65rem', padding: '0.4rem 0.65rem', background: 'var(--bg-subtle)', border: '1px solid var(--border-color)', borderRadius: '4px', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-                  Restoration: {gw.restoration_result.tokens_found.length} token(s) resolved to original values.
+
+              {gw.restoration_result?.tokens_found?.length > 0 ? (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+                  {/* Left: raw output with tokens highlighted */}
+                  <div>
+                    <div style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      Raw Output (Tokenized)
+                    </div>
+                    <div style={{ background: 'var(--bg-dark)', borderRadius: '6px', padding: '0.75rem', border: '1px solid var(--border-color)', minHeight: '80px' }}>
+                      <SanitizedOutput text={gw.mock_tool_output} />
+                    </div>
+                  </div>
+
+                  {/* Right: restored output with original values */}
+                  <div>
+                    <div style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.4rem', textTransform: 'uppercase', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                      <span>Restored Output</span>
+                      <span style={{ fontSize: '0.65rem', color: '#22c55e', border: '1px solid rgba(34,197,94,0.35)', borderRadius: '3px', padding: '0.05rem 0.35rem', background: 'rgba(34,197,94,0.07)' }}>PII Restored</span>
+                    </div>
+                    <div style={{ background: 'var(--bg-dark)', borderRadius: '6px', padding: '0.75rem', border: '1px solid rgba(34,197,94,0.25)', minHeight: '80px' }}>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', whiteSpace: 'pre-wrap', wordBreak: 'break-all', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+                        {typeof gw.restoration_result.restored_text === 'string'
+                          ? gw.restoration_result.restored_text
+                          : JSON.stringify(gw.restoration_result.restored_text, null, 2)}
+                      </span>
+                    </div>
+
+                    {/* Token → Value mapping */}
+                    <div style={{ marginTop: '0.5rem', display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+                      {gw.restoration_result.restoration_details?.filter(d => d.status === 'success').map((d, i) => (
+                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.72rem' }}>
+                          <span style={{ color: '#38bdf8', fontFamily: 'var(--font-mono)', background: 'rgba(56,189,248,0.08)', border: '1px solid rgba(56,189,248,0.25)', borderRadius: '3px', padding: '0.05rem 0.3rem' }}>
+                            {d.token}
+                          </span>
+                          <span style={{ color: 'var(--text-muted)' }}>→</span>
+                          <span style={{ color: '#22c55e', fontFamily: 'var(--font-mono)', fontWeight: 600 }}>
+                            {d.value}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
+              ) : (
+                <pre className="code-block">{JSON.stringify(gw.mock_tool_output, null, 2)}</pre>
               )}
             </div>
           </div>
