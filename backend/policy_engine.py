@@ -20,6 +20,42 @@ class PolicyEngine:
                 return policy
         return None
 
+    def evaluate_field_action(self, tool_name: str, field_path: str, entity_type: str = "") -> str:
+        """
+        Determines the specific policy action (TOKENIZE, REDACT, ALLOW, BLOCK)
+        for a given field path and entity type under the target tool policy.
+        """
+        policy = self.get_policy(tool_name)
+        if not policy:
+            return "BLOCK"
+
+        permitted_fields = policy.get("permitted_fields", [])
+        base_field = field_path.split(".")[0] if field_path else ""
+
+        if base_field and permitted_fields and base_field not in permitted_fields:
+            if policy.get("block_if_unpermitted_field", True):
+                return "BLOCK"
+
+        field_rules = policy.get("field_rules", {})
+        if field_path in field_rules:
+            rule = field_rules[field_path]
+            action = rule.get("action") if isinstance(rule, dict) else str(rule)
+            return action.upper()
+        elif base_field in field_rules:
+            rule = field_rules[base_field]
+            action = rule.get("action") if isinstance(rule, dict) else str(rule)
+            return action.upper()
+
+        redact_fields = policy.get("redact_pii_in", [])
+        if redact_fields and (base_field in redact_fields or field_path in redact_fields):
+            tool_action = policy.get("action", "redact").upper()
+            return tool_action
+
+        if base_field in permitted_fields:
+            return "ALLOW"
+
+        return policy.get("action", "redact").upper()
+
     def evaluate_request(self, tool_name: str, arguments: Any) -> Dict[str, Any]:
         """
         Evaluates a tool-call request against configured policy rules.

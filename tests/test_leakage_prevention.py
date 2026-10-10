@@ -69,9 +69,12 @@ def test_leakage_prevention_tokenization(gateway_setup):
     assert res["outbound_verification"]["passed"] is True
     
     received_payload = registry.received_payloads[-1]["received_arguments"]
-    # Body should contain token, NOT the raw email string
+    # Recipient 'to' field should contain token, NOT the raw email string
+    assert secret_email not in received_payload["to"]
+    assert "<" in received_payload["to"] or "TOK_" in received_payload["to"]
+    # Message 'body' field should be redacted according to field policy
     assert secret_email not in received_payload["body"]
-    assert "<EMAIL" in received_payload["body"] or "<" in received_payload["body"]
+    assert "[REDACTED" in received_payload["body"] or "<" in received_payload["body"]
 
 def test_policy_fail_closed_unknown_tool(gateway_setup):
     gw, registry = gateway_setup

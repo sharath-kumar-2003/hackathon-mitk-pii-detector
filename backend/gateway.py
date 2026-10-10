@@ -36,40 +36,72 @@ class Gateway:
     def _sanitize_recursive(
         self,
         payload: Any,
+        tool_name: str,
         redact_fields: List[str],
         policy_action: str,
         session_id: str,
         req_id: str,
         protected_values: List[Dict[str, Any]],
         parent_key: str = "",
-        inside_redact: bool = False
+        inside_redact: bool = False,
+        action_override: Optional[str] = None
     ) -> Any:
         if isinstance(payload, str):
             spans = self.detector.analyze_text(payload)
-            if spans:
-                should_protect = inside_redact or (not redact_fields) or (parent_key in redact_fields)
-                if should_protect:
-                    for s in spans:
-                        protected_values.append({"field": parent_key or "text", "value": payload[s.start:s.end]})
-                    if policy_action == "tokenize":
-                        return self.tokenizer.tokenize_spans(payload, spans, session_id, req_id)
-                    elif policy_action == "redact":
-                        return self.detector.anonymize_text(payload, spans)
-            return payload
+            if not spans:
+                return payload
+
+            # Sort spans in descending start-offset order to avoid index shifting during string substitution
+            sorted_spans = sorted(spans, key=lambda x: getattr(x, 'start', 0), reverse=True)
+            sanitized_str = payload
+
+            for s in sorted_spans:
+                start = getattr(s, 'start', 0)
+                end = getattr(s, 'end', len(payload))
+                entity_type = getattr(s, 'entity_type', 'PII')
+                val = payload[start:end]
+
+                if action_override:
+                    span_action = action_override.upper()
+                else:
+                    span_action = self.policy_engine.evaluate_field_action(
+                        tool_name, parent_key, entity_type
+                    )
+
+                if span_action == "BLOCK":
+                    raise ValueError(f"Security Policy Violation: Field '{parent_key}' is blocked by policy.")
+
+                if span_action == "TOKENIZE":
+                    protected_values.append({"field": parent_key or "text", "value": val, "action": "TOKENIZE"})
+                    token = self.tokenizer.tokenize(val, session_id, entity_type=entity_type, request_id=req_id)
+                    sanitized_str = sanitized_str[:start] + token + sanitized_str[end:]
+
+                elif span_action == "REDACT":
+                    protected_values.append({"field": parent_key or "text", "value": val, "action": "REDACT"})
+                    placeholder = f"[REDACTED_{entity_type}]"
+                    sanitized_str = sanitized_str[:start] + placeholder + sanitized_str[end:]
+
+                elif span_action == "ALLOW":
+                    protected_values.append({"field": parent_key or "text", "value": val, "action": "ALLOW"})
+
+            return sanitized_str
 
         elif isinstance(payload, dict):
             new_dict = {}
             for k, v in payload.items():
+                field_path = f"{parent_key}.{k}" if parent_key else k
                 is_redact_key = inside_redact or (k in redact_fields) or (not redact_fields)
                 new_dict[k] = self._sanitize_recursive(
-                    v, redact_fields, policy_action, session_id, req_id, protected_values, parent_key=k, inside_redact=is_redact_key
+                    v, tool_name, redact_fields, policy_action, session_id, req_id, protected_values,
+                    parent_key=field_path, inside_redact=is_redact_key, action_override=action_override
                 )
             return new_dict
 
         elif isinstance(payload, list):
             return [
                 self._sanitize_recursive(
-                    item, redact_fields, policy_action, session_id, req_id, protected_values, parent_key=parent_key, inside_redact=inside_redact
+                    item, tool_name, redact_fields, policy_action, session_id, req_id, protected_values,
+                    parent_key=parent_key, inside_redact=inside_redact, action_override=action_override
                 )
                 for item in payload
             ]
@@ -148,16 +180,34 @@ class Gateway:
         detected_entities = self.detector.analyze_payload(arguments)
         stage_timings["detection_ms"] = (time.perf_counter() - t_detect_start) * 1000.0
 
-        # Step 3: Transformation / Redaction / Tokenization (Recursive)
+        # Step 3: Transformation / Redaction / Tokenization (Recursive & Field-Aware)
         t_trans_start = time.perf_counter()
         policy_action = action_override.lower() if action_override else policy_eval["action"].lower()
         protected_values: List[Dict[str, Any]] = []
 
         redact_fields = policy_eval.get("policy", {}).get("redact_pii_in", []) if policy_eval.get("policy") else []
 
-        sanitized_arguments = self._sanitize_recursive(
-            arguments, redact_fields, policy_action, session_id, req_id, protected_values
-        )
+        try:
+            sanitized_arguments = self._sanitize_recursive(
+                arguments, tool_name, redact_fields, policy_action, session_id, req_id, protected_values,
+                action_override=action_override
+            )
+        except ValueError as e:
+            total_ms = (time.perf_counter() - start_total) * 1000.0
+            self.perf_tracker.record_run(0.001, total_ms, stage_timings)
+            return {
+                "request_id": req_id,
+                "status": "blocked",
+                "action": "BLOCK",
+                "decision": "BLOCK",
+                "reason": str(e),
+                "pii_detected": detected_entities,
+                "sanitized_arguments": None,
+                "mock_tool_output": None,
+                "outbound_verification": {"passed": True, "explanation": str(e)},
+                "restoration_result": None,
+                "timings_ms": {**stage_timings, "total_ms": round(total_ms, 3)}
+            }
 
         stage_timings["transformation_ms"] = (time.perf_counter() - t_trans_start) * 1000.0
 

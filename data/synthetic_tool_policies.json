@@ -4,6 +4,9 @@
     "permitted_fields": [
       "query"
     ],
+    "field_rules": {
+      "query": { "action": "redact" }
+    },
     "redact_pii_in": [
       "query"
     ],
@@ -18,12 +21,18 @@
       "subject",
       "body"
     ],
+    "field_rules": {
+      "to": { "action": "tokenize" },
+      "body": { "action": "redact" },
+      "subject": { "action": "allow" }
+    },
     "redact_pii_in": [
+      "to",
       "body"
     ],
     "block_if_unpermitted_field": true,
     "action": "tokenize",
-    "description": "Email delivery tool. Tokenizes PII in body so original content can be restored post-delivery."
+    "description": "Email delivery tool. Tokenizes recipient 'to' address and redacts PII in message 'body'."
   },
   {
     "tool_name": "customer_lookup",
@@ -31,6 +40,10 @@
       "customer_id",
       "fields"
     ],
+    "field_rules": {
+      "customer_id": { "action": "allow" },
+      "fields": { "action": "allow" }
+    },
     "redact_pii_in": [],
     "block_if_unpermitted_field": true,
     "action": "allow",
@@ -43,6 +56,11 @@
       "user_reference",
       "notes"
     ],
+    "field_rules": {
+      "report_name": { "action": "allow" },
+      "user_reference": { "action": "allow" },
+      "notes": { "action": "tokenize" }
+    },
     "redact_pii_in": [
       "notes"
     ],
@@ -56,6 +74,10 @@
       "title",
       "content"
     ],
+    "field_rules": {
+      "title": { "action": "allow" },
+      "content": { "action": "redact" }
+    },
     "redact_pii_in": [
       "content"
     ],
