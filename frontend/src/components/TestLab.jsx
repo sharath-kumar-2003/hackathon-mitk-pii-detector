@@ -102,10 +102,24 @@ function HighlightedOriginal({ text, piiEntities }) {
   );
 }
 
+function formatIfJson(text) {
+  if (!text) return '';
+  if (typeof text !== 'string') return JSON.stringify(text, null, 2);
+  try {
+    const parsed = JSON.parse(text);
+    if (typeof parsed === 'object' && parsed !== null) {
+      return JSON.stringify(parsed, null, 2);
+    }
+  } catch (e) {
+    // Keep raw string if not JSON
+  }
+  return text;
+}
+
 // Highlights both [REDACTED_*] (amber) and <TOKEN_ID> (blue) in any mix
 function SanitizedOutput({ text }) {
   if (!text) return <span style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>—</span>;
-  const str = typeof text === 'string' ? text : JSON.stringify(text, null, 2);
+  const str = formatIfJson(text);
 
   // Split on BOTH redact placeholders and tokenize markers in one pass
   const parts = str.split(/(\[REDACTED_[A-Z_]+\]|<[A-Z][A-Z0-9_]*_[A-Z0-9]+>)/g);
@@ -129,6 +143,50 @@ function SanitizedOutput({ text }) {
               borderRadius: '3px', padding: '0 4px', border: '1px solid rgba(56,189,248,0.3)',
               fontWeight: 600, fontSize: '0.72rem',
             }} title="Tokenized">{p}</mark>
+          );
+        }
+        return <span key={i} style={{ color: 'var(--text-secondary)' }}>{p}</span>;
+      })}
+    </span>
+  );
+}
+
+function RestoredOutput({ text, details }) {
+  if (!text) return <span style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>—</span>;
+  const str = formatIfJson(text);
+  const successfulDetails = (details || []).filter(d => d.status === 'success' && d.value);
+
+  if (successfulDetails.length === 0) {
+    return (
+      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', whiteSpace: 'pre-wrap', wordBreak: 'break-all', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+        {str}
+      </span>
+    );
+  }
+
+  const valuesToHighlight = [...new Set(successfulDetails.map(d => d.value).filter(Boolean))];
+  if (valuesToHighlight.length === 0) {
+    return (
+      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', whiteSpace: 'pre-wrap', wordBreak: 'break-all', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
+        {str}
+      </span>
+    );
+  }
+
+  const esc = valuesToHighlight.map(v => v.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+  const pattern = new RegExp(`(${esc})`, 'g');
+  const parts = str.split(pattern);
+
+  return (
+    <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', lineHeight: 1.6, whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+      {parts.map((p, i) => {
+        if (valuesToHighlight.includes(p)) {
+          return (
+            <mark key={i} style={{
+              background: 'rgba(34,197,94,0.12)', color: '#22c55e',
+              borderRadius: '3px', padding: '0 4px', border: '1px solid rgba(34,197,94,0.3)',
+              fontWeight: 600, fontSize: '0.72rem',
+            }} title="Restored PII">{p}</mark>
           );
         }
         return <span key={i} style={{ color: 'var(--text-secondary)' }}>{p}</span>;
@@ -553,11 +611,7 @@ export default function TestLab({ onRefreshAll }) {
                       <span style={{ fontSize: '0.65rem', color: '#22c55e', border: '1px solid rgba(34,197,94,0.35)', borderRadius: '3px', padding: '0.05rem 0.35rem', background: 'rgba(34,197,94,0.07)' }}>PII Restored</span>
                     </div>
                     <div style={{ background: 'var(--bg-dark)', borderRadius: '6px', padding: '0.75rem', border: '1px solid rgba(34,197,94,0.25)', minHeight: '80px' }}>
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: '0.78rem', whiteSpace: 'pre-wrap', wordBreak: 'break-all', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                        {typeof gw.restoration_result.restored_text === 'string'
-                          ? gw.restoration_result.restored_text
-                          : JSON.stringify(gw.restoration_result.restored_text, null, 2)}
-                      </span>
+                      <RestoredOutput text={gw.restoration_result.restored_text} details={gw.restoration_result.restoration_details} />
                     </div>
 
                     {/* Token → Value mapping */}
