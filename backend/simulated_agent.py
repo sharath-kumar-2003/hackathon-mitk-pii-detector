@@ -55,7 +55,7 @@ class SimulatedAgent:
 
     def __init__(self):
         api_key = os.environ.get("GEMINI_API_KEY", "")
-        self.model_name = os.environ.get("GEMINI_MODEL", "gemini-3.5-flash-lite")
+        self.model_name = os.environ.get("GEMINI_MODEL", "gemini-3.8-flash")
         if api_key:
             try:
                 self.client = genai.Client(api_key=api_key)

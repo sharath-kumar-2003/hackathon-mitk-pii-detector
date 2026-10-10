@@ -145,7 +145,7 @@ class PIIDetector:
 
     def __init__(self):
         api_key = os.environ.get("GEMINI_API_KEY", "")
-        self.model_name = os.environ.get("GEMINI_MODEL", "gemini-3.5-flash-lite")
+        self.model_name = os.environ.get("GEMINI_MODEL", "gemini-3.8-flash")
         if not api_key:
             print("[PIIDetector] WARNING: GEMINI_API_KEY not set. Will use regex-only detection.")
             print("[PIIDetector] Set GEMINI_API_KEY in your .env or environment variables.")
