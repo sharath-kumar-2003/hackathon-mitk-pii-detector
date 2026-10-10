@@ -103,9 +103,20 @@ class SimulatedAgent:
         """Fast, deterministic fallback routing using pattern matching."""
         p_lower = prompt.lower()
 
-        # Intent 1: Email sending
-        email_match = re.search(r"[\w\.-]+@[\w\.-]+\.\w+", prompt)
-        if "email" in p_lower or "send" in p_lower:
+        # Intent 1: Profile processing / Onboarding / Summarization (High Priority)
+        if any(kw in p_lower for kw in ["onboard", "profile", "summar", "process", "confirm", "document", "report"]):
+            return {
+                "tool_name": "document_summarizer",
+                "arguments": {
+                    "title": "Customer Onboarding & System Deployment Profile",
+                    "content": prompt
+                }
+            }
+
+        # Intent 2: Explicit Email sending (e.g. "send email to", "email to", "compose email")
+        email_intent = bool(re.search(r"\b(?:send|mail|compose)\s+(?:an?\s+)?email\b|\bemail\s+to\b|\bsend\s+to\b", p_lower))
+        if email_intent or (("send" in p_lower or "mail" in p_lower) and "@" in prompt):
+            email_match = re.search(r"[\w\.-]+@[\w\.-]+\.\w+", prompt)
             to_addr = email_match.group(0) if email_match else "support@enterprise.io"
             return {
                 "tool_name": "send_email",
@@ -113,16 +124,6 @@ class SimulatedAgent:
                     "to": to_addr,
                     "subject": "Customer Notification & Verification",
                     "body": prompt
-                }
-            }
-
-        # Intent 2: Profile processing / Onboarding / Summarization
-        if any(kw in p_lower for kw in ["onboard", "profile", "summar", "process", "confirm", "document", "report"]):
-            return {
-                "tool_name": "document_summarizer",
-                "arguments": {
-                    "title": "Customer Onboarding & System Deployment Profile",
-                    "content": prompt
                 }
             }
 
