@@ -95,16 +95,33 @@ export default function AuditLogs({ logs }) {
                           </div>
                         </div>
                         <div>
-                          <div style={{ fontSize: '0.7rem', fontWeight: 600, marginBottom: '0.2rem', color: 'var(--text-muted)' }}>PII ENTITY TYPES</div>
-                          <div style={{ fontSize: '0.8rem' }}>
+                          <div style={{ fontSize: '0.7rem', fontWeight: 600, marginBottom: '0.35rem', color: 'var(--text-muted)' }}>PII ENTITIES &amp; ACTIONS</div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
                             {Array.isArray(log.pii_detected) && log.pii_detected.length > 0 ? (
-                              log.pii_detected.map((p, k) => (
-                                <span key={k} className="badge badge-neutral" style={{ marginRight: '0.25rem' }}>
-                                  {typeof p === 'string' ? p : p.entity_type}
-                                </span>
-                              ))
+                              log.pii_detected.map((p, k) => {
+                                const entityType = typeof p === 'string' ? p : p.entity_type;
+                                // Match against sanitization_action or per-entity action if available
+                                const rawAction = (typeof p === 'object' && p.action)
+                                  || log.sanitization_action
+                                  || log.policy_decision
+                                  || 'ALLOW';
+                                const act = rawAction.toUpperCase();
+                                const actionBadge = {
+                                  TOKENIZE: { cls: 'badge-info', label: 'TOKENIZE' },
+                                  REDACT: { cls: 'badge-warning', label: 'REDACT' },
+                                  ALLOW: { cls: 'badge-success', label: 'ALLOW' },
+                                  BLOCK: { cls: 'badge-danger', label: 'BLOCK' },
+                                }[act] || { cls: 'badge-neutral', label: act };
+                                return (
+                                  <div key={k} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.75rem' }}>
+                                    <span className="badge badge-neutral">{entityType}</span>
+                                    <span style={{ color: 'var(--text-muted)', fontSize: '0.65rem' }}>→</span>
+                                    <span className={`badge ${actionBadge.cls}`}>{actionBadge.label}</span>
+                                  </div>
+                                );
+                              })
                             ) : (
-                              'None'
+                              <span style={{ color: 'var(--text-muted)', fontSize: '0.8rem' }}>None</span>
                             )}
                           </div>
                         </div>

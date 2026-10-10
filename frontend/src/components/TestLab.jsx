@@ -261,7 +261,23 @@ export default function TestLab({ onRefreshAll }) {
             </div>
             <div className="metric-card">
               <div className="metric-label">Firewall Action</div>
-              <div><ActionBadge action={action} decision={gw.decision} /></div>
+              {(() => {
+                const pv = gw.protected_values || [];
+                if (pv.length === 0) return <div><ActionBadge action={action} decision={gw.decision} /></div>;
+                const counts = pv.reduce((acc, x) => { acc[x.action] = (acc[x.action] || 0) + 1; return acc; }, {});
+                const keys = Object.keys(counts);
+                if (keys.length === 1) return <div><ActionBadge action={keys[0]} decision={keys[0]} /></div>;
+                return (
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.25rem', marginTop: '0.2rem' }}>
+                    {keys.map(k => (
+                      <span key={k} style={{ display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                        <ActionBadge action={k} decision={k} />
+                        <span style={{ fontSize: '0.68rem', color: 'var(--text-muted)' }}>×{counts[k]}</span>
+                      </span>
+                    ))}
+                  </div>
+                );
+              })()}
             </div>
             <div className="metric-card">
               <div className="metric-label">PII Detected</div>
@@ -381,22 +397,30 @@ export default function TestLab({ onRefreshAll }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {piiDetected.map((p, i) => (
-                      <tr key={i} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
-                        <td style={{ padding: '0.4rem 0.6rem' }}>
-                          <span className="badge badge-neutral">{p.entity_type}</span>
-                        </td>
-                        <td style={{ padding: '0.4rem 0.6rem', fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)', maxWidth: '240px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                          {p.value}
-                        </td>
-                        <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-muted)' }}>
-                          {Math.round((p.score || 0.9) * 100)}%
-                        </td>
-                        <td style={{ padding: '0.4rem 0.6rem' }}>
-                          <ActionBadge action={action} decision={action.toUpperCase()} />
-                        </td>
-                      </tr>
-                    ))}
+                    {piiDetected.map((p, i) => {
+                      const protectedValues = gw.protected_values || [];
+                      const match = protectedValues.find(pv =>
+                        pv.value === p.value ||
+                        (p.value && pv.value && pv.value.toLowerCase() === p.value.toLowerCase())
+                      );
+                      const entityAction = match?.action || action.toUpperCase() || 'ALLOW';
+                      return (
+                        <tr key={i} style={{ borderBottom: '1px solid var(--border-subtle)' }}>
+                          <td style={{ padding: '0.4rem 0.6rem' }}>
+                            <span className="badge badge-neutral">{p.entity_type}</span>
+                          </td>
+                          <td style={{ padding: '0.4rem 0.6rem', fontFamily: 'var(--font-mono)', color: 'var(--text-secondary)', maxWidth: '240px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            {p.value}
+                          </td>
+                          <td style={{ padding: '0.4rem 0.6rem', color: 'var(--text-muted)' }}>
+                            {Math.round((p.score || 0.9) * 100)}%
+                          </td>
+                          <td style={{ padding: '0.4rem 0.6rem' }}>
+                            <ActionBadge action={entityAction} decision={entityAction} />
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
